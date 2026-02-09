@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:async'; 
 
 void main() {
   runApp(const MyApp());
@@ -38,6 +39,8 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   String _lastScannedCode = "Aguardando leitura...";
   final StringBuffer _buffer = StringBuffer();
   final List<String> _scanHistory = [];
+
+  Timer? _bufferCleaner;
 
   // Focus for the actionable buttons/list to ensure D-Pad navigation works
   final FocusNode _listFocusNode = FocusNode();
@@ -91,10 +94,20 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     // Scanners usually simulate keyboard presses.
     // event.character works for printable characters on most platforms.
     if (event.character != null && event.character!.isNotEmpty) {
-      // Check if it's a printable character (not a control char)
       bool isPrintable = event.character!.runes.every((r) => r >= 32);
       if (isPrintable) {
+        
+        // 1. Cancela o limpador anterior (se existir) porque você digitou algo novo
+        _bufferCleaner?.cancel();
+
+        // 2. Adiciona a letra no buffer
         _buffer.write(event.character);
+        
+        // 3. Inicia um novo limpador: Se ficar 2 segundos sem digitar nada, apaga tudo.
+        _bufferCleaner = Timer(const Duration(seconds: 2), () {
+             _buffer.clear();
+             print("--- Buffer limpo por inatividade (Lixo removido) ---");
+        });
       }
     }
   }
