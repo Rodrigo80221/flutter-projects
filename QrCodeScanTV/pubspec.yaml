@@ -12,6 +12,19 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  
+  # Networking
+  http: ^1.2.0
+  
+  # Formatting
+  intl: ^0.19.0
+  
+  # State Management
+  provider: ^6.1.1
+  
+  # Typography & UI
+  google_fonts: ^6.1.0
+  animate_do: ^3.3.4
 
 dev_dependencies:
   flutter_test:
@@ -20,3 +33,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/

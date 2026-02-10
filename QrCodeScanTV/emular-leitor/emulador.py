@@ -2,36 +2,30 @@ import pyautogui
 import time
 import sys
 
-print("=== EMULADOR DE LEITOR DE CÓDIGO DE BARRAS ===")
-print("Este script vai digitar o código como se fosse um scanner USB.")
-print("Para sair, pressione Ctrl+C no terminal.\n")
+# A URL fixa que o "leitor" vai digitar
+CODIGO_FIXO = "https://purple-hill-043f3e70f.4.azurestaticapps.net/01/02037860270784/21/4751550097896?11=251215&17=251216&3103=006020&3303=006022&3922=27078"
 
-try:
-    while True:
-        # 1. Pede o código para você digitar no terminal
-        barcode = input("Digite o código de barras para testar: ")
-        
-        if not barcode:
-            continue
+print("=== AUTO-SCANNER INICIADO ===")
+print("Este script vai digitar a URL fixa automaticamente.")
+print(f"Dados: {CODIGO_FIXO[:50]}... (URL Completa)")
+print("\n--> ATENÇÃO: CLIQUE NA JANELA DO APP FLUTTER AGORA!")
 
-        print(f"--> Preparando para enviar '{barcode}'...")
-        print("--> VOCÊ TEM 3 SEGUNDOS PARA CLICAR NA JANELA DO APP FLUTTER!")
-        
-        # 2. Dá tempo de você focar a janela do Flutter
-        for i in range(3, 0, -1):
-            print(f"{i}...")
-            time.sleep(1)
+# Contagem regressiva de 4 segundos
+for i in range(4, 0, -1):
+    print(f"Iniciando em {i} segundos...")
+    time.sleep(1)
 
-        print("--> ENVIANDO DADOS...")
-        
-        # 3. Digita o código caractere por caractere (simula o HID)
-        pyautogui.write(barcode, interval=0.05)
-        
-        # 4. Pressiona ENTER no final (sinaliza o fim da leitura)
-        pyautogui.press('enter')
-        
-        print("--> Concluído! Verifique o app.\n")
+print("\n--> ENVIANDO DADOS RAPIDAMENTE...")
 
-except KeyboardInterrupt:
-    print("\nEncerrando emulador.")
-    sys.exit()
+# Digita a URL. 
+# Diminui o interval para 0.01 para ser mais rápido, pois a URL é muito longa.
+pyautogui.write(CODIGO_FIXO, interval=0.01)
+
+# Pressiona ENTER no final
+pyautogui.press('enter')
+
+print("\n--> SUCESSO! Código enviado.")
+print("Esta janela fechará automaticamente em 5 segundos.")
+
+# Espera um pouco para você conseguir ler a mensagem de sucesso antes da janela fechar
+time.sleep(5)
