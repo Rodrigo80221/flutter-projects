@@ -218,7 +218,11 @@ class _TotemScreenState extends State<TotemScreen> {
                             children: [
                               const SizedBox(height: 40),
                               ProductCard(product: _currentProduct!),
-                              if (_currentPromo != null) PromoCard(promo: _currentPromo!),
+                              if (_currentPromo != null) 
+                                PromoCard(
+                                  promo: _currentPromo!, 
+                                  currentWeight: _currentProduct?.pesoBruto,
+                                ),
                             ],
                           ),
                         )

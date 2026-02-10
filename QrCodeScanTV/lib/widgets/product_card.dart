@@ -31,28 +31,33 @@ class ProductCard extends StatelessWidget {
       return null;
     }
 
-    double? preco = parsePrice(product.preco);
-    double? valorPromo = parsePrice(product.valorPromocao);
-    
-    // Also parse precoDisplay correctly if it wasn't parsed above
-    String precoDisplay;
-    if (preco != null) {
-      precoDisplay = currencyFormatter.format(preco);
+    double? preco = parsePrice(product.preco); // Original Total Price (14.28)
+    double? valorPromo = parsePrice(product.valorPromocao); // Unit Promo Price (29.99/kg)
+    double? valorVendaPromo = parsePrice(product.valorVendaPromo); // Promo Total Price (12.24)
+    double? valorVenda = parsePrice(product.valorVenda); // Unit Normal Price (34.99/kg)
+
+    bool isPromo = product.isPromo;
+
+    // Determine what to display for Unit Price (R$/Kg)
+    String unitPriceDisplay;
+    if (isPromo && valorPromo != null) {
+      unitPriceDisplay = currencyFormatter.format(valorPromo);
     } else {
-       // fallback if preco is null or unparseable
-       precoDisplay = product.preco?.toString() ?? 'R\$ --,--';
+      unitPriceDisplay = valorVenda != null ? currencyFormatter.format(valorVenda) : (product.valorVenda?.toString() ?? '-');
     }
 
-    String? valorPromoDisplay;
-    if (valorPromo != null) {
-      valorPromoDisplay = currencyFormatter.format(valorPromo);
+    // Determine Main Display Price (The Big Number)
+    String mainPriceDisplay;
+    // Determine "From" Price (Strikethrough)
+    String? fromPriceDisplay;
+
+    if (isPromo && valorVendaPromo != null) {
+       mainPriceDisplay = currencyFormatter.format(valorVendaPromo);
+       fromPriceDisplay = preco != null ? currencyFormatter.format(preco) : null;
     } else {
-       if (product.valorPromocao != null) {
-          valorPromoDisplay = product.valorPromocao.toString();
-       }
+       mainPriceDisplay = preco != null ? currencyFormatter.format(preco) : 'R\$ --,--';
+       fromPriceDisplay = null;
     }
-    
-    bool isPromo = product.isPromo && valorPromo != null && valorPromo > 0;
 
     // Weight formatting
     String peso = product.pesoBruto ?? '-';
@@ -127,14 +132,14 @@ class ProductCard extends StatelessWidget {
                         style: GoogleFonts.inter(fontSize: 18, color: Colors.grey[600]),
                       ),
                        Text(
-                        product.valorVenda?.toString() ?? '-',
+                        unitPriceDisplay,
                         style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ]
                   ],
                 ),
                 const SizedBox(height: 24),
-                if (isPromo)
+                if (isPromo && fromPriceDisplay != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -142,7 +147,7 @@ class ProductCard extends StatelessWidget {
                         children: [
                           Text('De ', style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[600])),
                           Text(
-                            precoDisplay,
+                            fromPriceDisplay,
                             style: GoogleFonts.inter(
                               fontSize: 16,
                               color: Colors.grey[500],
@@ -153,7 +158,7 @@ class ProductCard extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        valorPromoDisplay ?? '',
+                        mainPriceDisplay,
                         style: GoogleFonts.inter(
                           fontSize: 56,
                           fontWeight: FontWeight.w900,
@@ -171,7 +176,7 @@ class ProductCard extends StatelessWidget {
                         style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[600]),
                       ),
                       Text(
-                        precoDisplay,
+                        mainPriceDisplay,
                         style: GoogleFonts.inter(
                           fontSize: 56,
                           fontWeight: FontWeight.w900,

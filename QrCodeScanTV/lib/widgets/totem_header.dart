@@ -11,8 +11,8 @@ class TotemHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Center(
         child: Image.asset(
-          'assets/images/logomago.png',
-          height: 80,
+          'assets/images/logo-big.png',
+          height: 120, // Increased size for the big logo
           errorBuilder: (context, error, stackTrace) {
             // Fallback if image not found
             return Container(
