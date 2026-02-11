@@ -11,6 +11,7 @@ import '../widgets/totem_header.dart';
 import '../widgets/product_card.dart';
 import '../widgets/promo_card.dart';
 import '../widgets/magic_state.dart';
+import '../widgets/maguinho_chat.dart';
 
 class TotemScreen extends StatefulWidget {
   const TotemScreen({super.key});
@@ -223,6 +224,9 @@ class _TotemScreenState extends State<TotemScreen> {
                                   promo: _currentPromo!, 
                                   currentWeight: _currentProduct?.pesoBruto,
                                 ),
+                              
+                              // Maguinho Section
+                              MaguinhoChatWidget(textoVenda: _currentProduct?.textoVenda),
                             ],
                           ),
                         )

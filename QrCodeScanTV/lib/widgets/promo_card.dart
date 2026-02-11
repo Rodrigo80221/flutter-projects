@@ -44,7 +44,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
     return ScaleTransition(
       scale: _scaleAnimation,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        margin: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
         child: CustomPaint(
           painter: DashedBorderPainter(color: const Color(0xFFFBC02D), strokeWidth: 2, gap: 5),
           child: Container(
