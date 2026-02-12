@@ -1,0 +1,192 @@
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy UP-TO-DATE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+WARNING: We recommend using a newer Android Gradle plugin to use compileSdk = 35
+
+This Android Gradle plugin (8.2.1) was tested up to compileSdk = 34.
+
+You are strongly encouraged to update your project to use a newer
+Android Gradle plugin that has been tested with compileSdk = 35.
+
+If you are already using the latest version of the Android Gradle plugin,
+you may need to wait until a newer version with support for compileSdk = 35 is available.
+
+To suppress this warning, add/update
+    android.suppressUnsupportedCompileSdk=35
+to this project's gradle.properties.
+> Task :app:buildKotlinToolingMetadata UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors
+> Task :app:compileFlutterBuildRelease UP-TO-DATE
+> Task :app:packJniLibsflutterBuildRelease UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :path_provider_android:preBuild UP-TO-DATE
+> Task :path_provider_android:preReleaseBuild UP-TO-DATE
+> Task :path_provider_android:writeReleaseAarMetadata UP-TO-DATE
+> Task :video_player_android:preBuild UP-TO-DATE
+> Task :video_player_android:preReleaseBuild UP-TO-DATE
+> Task :video_player_android:writeReleaseAarMetadata UP-TO-DATE
+> Task :app:checkReleaseAarMetadata UP-TO-DATE
+> Task :app:cleanMergeReleaseAssets
+> Task :app:mergeReleaseShaders UP-TO-DATE
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :path_provider_android:mergeReleaseShaders UP-TO-DATE
+> Task :path_provider_android:compileReleaseShaders NO-SOURCE
+> Task :path_provider_android:generateReleaseAssets UP-TO-DATE
+> Task :path_provider_android:packageReleaseAssets UP-TO-DATE
+> Task :video_player_android:mergeReleaseShaders UP-TO-DATE
+> Task :video_player_android:compileReleaseShaders NO-SOURCE
+> Task :video_player_android:generateReleaseAssets UP-TO-DATE
+> Task :video_player_android:packageReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:copyFlutterAssetsRelease
+> Task :app:generateReleaseResValues UP-TO-DATE
+> Task :path_provider_android:generateReleaseResValues UP-TO-DATE
+> Task :path_provider_android:generateReleaseResources UP-TO-DATE
+> Task :path_provider_android:packageReleaseResources UP-TO-DATE
+> Task :video_player_android:generateReleaseResValues UP-TO-DATE
+> Task :video_player_android:generateReleaseResources UP-TO-DATE
+> Task :video_player_android:packageReleaseResources UP-TO-DATE
+> Task :app:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :app:generateReleaseResources UP-TO-DATE
+> Task :app:mergeReleaseResources UP-TO-DATE
+> Task :app:packageReleaseResources UP-TO-DATE
+> Task :app:parseReleaseLocalResources UP-TO-DATE
+> Task :app:createReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksRelease UP-TO-DATE
+> Task :path_provider_android:extractDeepLinksRelease UP-TO-DATE
+> Task :path_provider_android:processReleaseManifest UP-TO-DATE
+> Task :video_player_android:extractDeepLinksRelease UP-TO-DATE
+> Task :video_player_android:processReleaseManifest UP-TO-DATE
+> Task :app:processReleaseMainManifest UP-TO-DATE
+> Task :app:processReleaseManifest UP-TO-DATE
+> Task :app:processReleaseManifestForPackage UP-TO-DATE
+> Task :path_provider_android:parseReleaseLocalResources UP-TO-DATE
+> Task :path_provider_android:generateReleaseRFile UP-TO-DATE
+> Task :video_player_android:parseReleaseLocalResources UP-TO-DATE
+> Task :video_player_android:generateReleaseRFile UP-TO-DATE
+> Task :app:processReleaseResources UP-TO-DATE
+> Task :path_provider_android:javaPreCompileRelease UP-TO-DATE
+> Task :path_provider_android:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :path_provider_android:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :video_player_android:javaPreCompileRelease UP-TO-DATE
+> Task :video_player_android:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :video_player_android:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :app:compileReleaseKotlin UP-TO-DATE
+> Task :app:javaPreCompileRelease UP-TO-DATE
+> Task :app:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :path_provider_android:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :path_provider_android:processReleaseJavaRes NO-SOURCE
+> Task :path_provider_android:createFullJarRelease UP-TO-DATE
+> Task :path_provider_android:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :path_provider_android:mergeReleaseNativeLibs NO-SOURCE
+> Task :path_provider_android:stripReleaseDebugSymbols NO-SOURCE
+> Task :path_provider_android:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :path_provider_android:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :path_provider_android:extractReleaseAnnotations UP-TO-DATE
+> Task :path_provider_android:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :path_provider_android:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :path_provider_android:prepareLintJarForPublish UP-TO-DATE
+> Task :path_provider_android:prepareReleaseArtProfile UP-TO-DATE
+> Task :path_provider_android:mergeReleaseJavaResource UP-TO-DATE
+> Task :path_provider_android:syncReleaseLibJars UP-TO-DATE
+> Task :path_provider_android:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :path_provider_android:extractProguardFiles UP-TO-DATE
+> Task :path_provider_android:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :path_provider_android:generateReleaseLintModel UP-TO-DATE
+> Task :video_player_android:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :video_player_android:processReleaseJavaRes NO-SOURCE
+> Task :video_player_android:createFullJarRelease UP-TO-DATE
+> Task :video_player_android:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :video_player_android:mergeReleaseNativeLibs NO-SOURCE
+> Task :video_player_android:stripReleaseDebugSymbols NO-SOURCE
+> Task :video_player_android:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :video_player_android:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :video_player_android:extractReleaseAnnotations UP-TO-DATE
+> Task :video_player_android:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :video_player_android:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :video_player_android:prepareLintJarForPublish UP-TO-DATE
+> Task :video_player_android:prepareReleaseArtProfile UP-TO-DATE
+> Task :video_player_android:mergeReleaseJavaResource UP-TO-DATE
+> Task :video_player_android:syncReleaseLibJars UP-TO-DATE
+> Task :video_player_android:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :video_player_android:extractProguardFiles UP-TO-DATE
+> Task :video_player_android:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :video_player_android:generateReleaseLintModel FAILED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+84 actionable tasks: 5 executed, 79 up-to-date
+.\gradlew.bat : 
+No linha:1 caractere:1
++ .\gradlew.bat assembleRelease > 
+log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~
+    + CategoryInfo          : NotSpecif 
+   ied: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCom 
+   mandError
+ 
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':video_player
+_android:generateReleaseLintModel'.
+> Could not resolve all files for 
+configuration ':video_player_android:rel
+easeUnitTestRuntimeClasspath'.
+   > Failed to transform 
+bcprov-jdk18on-1.78.1.jar (org.bouncycas
+tle:bcprov-jdk18on:1.78.1) to match 
+attributes {artifactType=processed-jar, 
+org.gradle.category=library, 
+org.gradle.libraryelements=jar, 
+org.gradle.status=release, 
+org.gradle.usage=java-runtime}.
+      > Execution failed for 
+JetifyTransform: C:\Users\rodrigo.rosa\.
+gradle\caches\modules-2\files-2.1\org.bo
+uncycastle\bcprov-jdk18on\1.78.1\39e9e45
+359e20998eb79c1828751f94a818d25f8\bcprov
+-jdk18on-1.78.1.jar.
+         > Failed to transform 'C:\Users
+\rodrigo.rosa\.gradle\caches\modules-2\f
+iles-2.1\org.bouncycastle\bcprov-jdk18on
+\1.78.1\39e9e45359e20998eb79c1828751f94a
+818d25f8\bcprov-jdk18on-1.78.1.jar' 
+using Jetifier. Reason: 
+IllegalArgumentException, message: 
+Unsupported class file major version 
+65. (Run with --stacktrace for more 
+details.)
+           Suggestions:
+            - Check out existing issues 
+at https://issuetracker.google.com/issue
+s?q=componentid:460323&s=modified_time:d
+esc, it's possible that this issue has 
+already been filed there.
+            - If this issue has not 
+been filed, please report it at https://
+issuetracker.google.com/issues/new?compo
+nent=460323 (run with --stacktrace and 
+provide a stack trace if possible).
+
+* Try:
+> Run with --stacktrace option to get 
+the stack trace.
+> Run with --info or --debug option to 
+get more log output.
+> Run with --scan to get full insights.
+> Get more help at 
+https://help.gradle.org.
+
+BUILD FAILED in 3s
