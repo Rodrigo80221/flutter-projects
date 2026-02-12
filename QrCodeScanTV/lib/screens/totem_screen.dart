@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../services/api_service.dart';
 import '../models/product_model.dart';
@@ -12,6 +13,16 @@ import '../widgets/product_card.dart';
 import '../widgets/promo_card.dart';
 import '../widgets/magic_state.dart';
 import '../widgets/maguinho_chat.dart';
+
+class LogEntry {
+  final DateTime timestamp;
+  final String message;
+  final bool isError;
+
+  LogEntry(this.message, {this.isError = false}) : timestamp = DateTime.now();
+  
+  String get formattedTime => DateFormat('HH:mm:ss').format(timestamp);
+}
 
 class TotemScreen extends StatefulWidget {
   const TotemScreen({super.key});
@@ -30,8 +41,9 @@ class _TotemScreenState extends State<TotemScreen> {
   PackVirtual? _currentPromo;
   bool _isLoading = false;
   
-  // History
-  final List<String> _history = [];
+  // History & Logs
+  final List<LogEntry> _logs = [];
+  final ScrollController _logScrollController = ScrollController();
   
   final ApiService _apiService = ApiService();
 
@@ -39,7 +51,18 @@ class _TotemScreenState extends State<TotemScreen> {
   void dispose() {
     _mainFocusNode.dispose();
     _bufferCleaner?.cancel();
+    _logScrollController.dispose();
     super.dispose();
+  }
+
+  void _addLog(String message, {bool isError = false}) {
+    setState(() {
+      _logs.insert(0, LogEntry(message, isError: isError));
+      // Keep only last 50 logs to avoid memory issues
+      if (_logs.length > 50) {
+        _logs.removeLast();
+      }
+    });
   }
 
   void _handleKey(RawKeyEvent event) {
@@ -64,133 +87,159 @@ class _TotemScreenState extends State<TotemScreen> {
       return;
     }
 
-    if (event.character != null && event.character!.isNotEmpty) {
+    String? charToAppend;
+
+    // Manual mapping to fix common scanner issues (Shift state errors, missing chars)
+    if (key == LogicalKeyboardKey.slash || key == LogicalKeyboardKey.numpadDivide) {
+      // Force slash for slash key and numpad divide
+      charToAppend = '/'; 
+    } else if (key == LogicalKeyboardKey.semicolon) {
+      // Bias towards colon if we are at the start of a URL
+      if (event.isShiftPressed || _buffer.toString().toLowerCase().endsWith('https') || _buffer.toString().toLowerCase().endsWith('http')) {
+        charToAppend = ':';
+      } else {
+        charToAppend = ';';
+      }
+    } else {
+      charToAppend = event.character;
+    }
+
+    if (charToAppend != null && charToAppend.isNotEmpty) {
       // Filter printable characters
-       if (event.character!.runes.every((r) => r >= 32)) {
+       if (charToAppend.runes.every((r) => r >= 32)) {
          _bufferCleaner?.cancel();
-         _buffer.write(event.character);
+         _buffer.write(charToAppend);
          _bufferCleaner = Timer(const Duration(seconds: 2), () {
-           _buffer.clear();
+           if (_buffer.isNotEmpty) {
+             // _addLog('Buffer limpo por timeout (incompleto): ${_buffer.toString()}', isError: true); // Optional: log timeouts
+             _buffer.clear();
+           }
          });
        }
     }
   }
 
   Future<void> _processScan(String scannedUrl) async {
+    _addLog('--- Nova Leitura Iniciada ---');
+    _addLog('Input Bruto: $scannedUrl');
+
+    // 1. Basic Protocol Cleanup
+    String processedUrl = scannedUrl;
+    // Fix common sticky-shift issue: "https?" -> "https://"
+    if (processedUrl.startsWith('https?')) {
+      processedUrl = processedUrl.replaceFirst('https?', 'https://');
+      _addLog('Correção de Protocolo: https? -> https://');
+    } else if (processedUrl.startsWith('http?')) {
+      processedUrl = processedUrl.replaceFirst('http?', 'http://');
+      _addLog('Correção de Protocolo: http? -> http://');
+    }
+
     setState(() {
       _isLoading = true;
       _currentProduct = null;
       _currentPromo = null;
-      // Add to history at the top
-      _history.insert(0, scannedUrl);
-      if (_history.length > 5) {
-        _history.removeLast();
-      }
     });
 
     try {
-      // 1. Parse URL
-      
-      // Logic from JS:
-      // Tenta pegar do pathname (Azure/Produção) ou do hash (Fallback/Local)
-      // Procura o segmento "21" (Identificador GS1 para Serial/Código)
-      
-      String? codigoBalanca;
-      String? codigoEtiqueta;
-      
-      print('Raw Scanned URL: $scannedUrl');
-
       String? extractedCode;
-      String cleanUrl = scannedUrl.trim();
-
-      // Priority Strategy: Manual String Split by GS1 AI Identifier "/21/"
-      // This is the most robust way to handle the "11" parameter issue described.
-      if (cleanUrl.contains('/21/')) {
-        List<String> parts = cleanUrl.split('/21/');
+      
+      // Strategy A: Standard Delimiter Split (/21/)
+      if (processedUrl.contains('/21/')) {
+        List<String> parts = processedUrl.split('/21/');
         if (parts.length > 1) {
-          // Take everything after the last '/21/'
           String candidate = parts.last;
-          
-          // Stop at '?' (Query parameters start)
-          if (candidate.contains('?')) {
-            candidate = candidate.split('?')[0];
-          }
-          
-          // Stop at '&' (In case '?' was missing/swallowed but params exist)
-          if (candidate.contains('&')) {
-            candidate = candidate.split('&')[0];
-          }
-
-          // Stop at next '/' (If there are further path segments)
-          if (candidate.contains('/')) {
-            candidate = candidate.split('/')[0];
-          }
-          
+          if (candidate.contains('?')) candidate = candidate.split('?')[0];
+          if (candidate.contains('&')) candidate = candidate.split('&')[0];
+          if (candidate.contains('/')) candidate = candidate.split('/')[0];
           extractedCode = candidate;
+          _addLog('Extração via /21/ sucesso: $extractedCode');
         }
       } 
       
-      // Final cleanup of extractedCode
+      // Strategy B: Robust Regex Fallback
+      if (extractedCode == null) {
+        _addLog('Tentando extração via Regex fallback...');
+        final fallbackRegex = RegExp(r'01\d{14}21([a-zA-Z0-9]+)');
+        final match = fallbackRegex.firstMatch(processedUrl);
+        if (match != null) {
+          String candidate = match.group(1)!;
+          extractedCode = candidate;
+          _addLog('Extração via Regex sucesso: $extractedCode');
+        } else {
+           _addLog('Falha na extração de código (Regex). URL pode estar inválida.', isError: true);
+        }
+      }
+
+      // Final cleanup and Validation of extractedCode
       if (extractedCode != null) {
-          // 1. Remove standard query delimiters if missed
-          final badChars = RegExp(r'[?&]');
+          final badChars = RegExp(r'[?&=]');
           if (extractedCode!.contains(badChars)) {
-              extractedCode = extractedCode!.split(badChars)[0];
+              List<String> parts = extractedCode!.split(badChars);
+              extractedCode = parts[0];
+              _addLog('Cleaned metadata: $extractedCode');
           }
           
-          // 2. Remove '=' and anything after (indicates leaked parameter key)
-          if (extractedCode!.contains('=')) {
-              extractedCode = extractedCode!.split('=')[0];
-          }
-          
-          // 3. Truncate to 13 digits. 
-          // GS1 Logic for this project: 6 (Balance) + 7 (Label) = 13 digits.
-          // If we have more (e.g. ...11), it's likely the next AI key leaking.
           if (extractedCode!.length > 13) {
              extractedCode = extractedCode!.substring(0, 13);
+             _addLog('Truncado para 13 chars: $extractedCode');
           }
       }
-      
-      print("Extracted Code Final: $extractedCode");
-      
-      if (extractedCode != null && extractedCode.length > 6) {
-        codigoBalanca = extractedCode.substring(0, 6);
-        codigoEtiqueta = extractedCode.substring(6);
+
+      String? codigoBalanca;
+      String? codigoEtiqueta;
+
+      if (extractedCode != null && extractedCode.length >= 13) {
+        codigoBalanca = extractedCode!.substring(0, 6);
+        codigoEtiqueta = extractedCode!.substring(6, 13);
+        _addLog('Parseado: Balança=$codigoBalanca, Etiqueta=$codigoEtiqueta');
+      } else {
+        if (extractedCode != null) {
+           _addLog('Código extraído muito curto para processar: ${extractedCode.length}', isError: true);
+        }
       }
       
-      print('Parsed: Balanca=$codigoBalanca, Etiqueta=$codigoEtiqueta');
-
       if (codigoBalanca != null && codigoEtiqueta != null) {
         // 2. Fetch Product
+        _addLog('Consultando Produto (Balança: $codigoBalanca)...');
         final product = await _apiService.consultarEtiqueta(codigoBalanca, codigoEtiqueta);
         
         if (product != null) {
+          _addLog('Produto encontrado: ${product.nome}');
           setState(() {
             _currentProduct = product;
           });
           
           // 3. Fetch Promo
+          _addLog('Buscando Promoções/Pack...');
           final promo = await _apiService.consultarPackVirtual(codigoBalanca!, codigoEtiqueta!);
           if (promo != null) {
+             _addLog('Promoção encontrada: ${promo.descricaoPack}');
             setState(() {
               _currentPromo = promo;
             });
+          } else {
+            _addLog('Nenhuma promoção ativa.');
           }
           
           // 4. Log Access
-           _apiService.gravarDadosAcesso(
+           _addLog('Registrando acesso na API...');
+           bool logSuccess = await _apiService.gravarDadosAcesso(
             codigoBalanca: codigoBalanca!,
             codigoEtiqueta: codigoEtiqueta!,
-            // codSessao and ipClient are skipped for now or can be added if we have a way to get them
           );
+          if(logSuccess) _addLog('Acesso registrado com sucesso.');
+          else _addLog('Falha ao registrar acesso.', isError: true);
           
         } else {
-           // Product not found, stay null (Magic State)
+           _addLog('Produto não encontrado na API.', isError: true);
         }
+      } else {
+        _addLog('Dados insuficientes para consulta.', isError: true);
       }
       
-    } catch (e) {
-      print('Error processing scan: $e');
+    } catch (e, stackTrace) {
+      _addLog('Erro CRÍTICO no processamento: $e', isError: true);
+      debugPrintStack(label: e.toString(), stackTrace: stackTrace);
     } finally {
       setState(() {
         _isLoading = false;
@@ -205,7 +254,7 @@ class _TotemScreenState extends State<TotemScreen> {
       onKey: _handleKey,
       autofocus: true,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8F9FA), // Off-white background from CSS
+        backgroundColor: const Color(0xFFF8F9FA), 
         body: Column(
           children: [
             const TotemHeader(),
@@ -232,28 +281,64 @@ class _TotemScreenState extends State<TotemScreen> {
                         )
                       : const MagicState(),
             ),
-            // Footer History
+            // Footer Logs
             Container(
+              height: 200, // Fixed height for logs
               width: double.infinity,
               color: Colors.grey[200],
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Histórico de Leituras:',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.grey[700]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Histórico e Logs do Sistema:',
+                        style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete_outline, size: 20, color: Colors.grey[600]),
+                        onPressed: () {
+                           setState(() {
+                             _logs.clear();
+                           });
+                        },
+                        tooltip: "Limpar Logs",
+                      )
+                    ],
                   ),
-                  const SizedBox(height: 5),
-                  if (_history.isEmpty)
-                    Text('Nenhuma leitura realizada.', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey))
-                  else
-                    ..._history.map((url) => Text(
-                          url,
-                          style: GoogleFonts.sourceCodePro(fontSize: 10, color: Colors.grey[600]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )),
+                  const Divider(height: 1),
+                  Expanded(
+                    child: _logs.isEmpty
+                      ? Center(child: Text('Aguardando leituras...', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey)))
+                      : ListView.separated(
+                          controller: _logScrollController,
+                          itemCount: _logs.length,
+                          separatorBuilder: (c, i) => const Divider(height: 1),
+                          itemBuilder: (context, index) {
+                            final log = _logs[index];
+                            return SelectableText.rich(
+                               TextSpan(
+                                 children: [
+                                   TextSpan(
+                                     text: '[${log.formattedTime}] ',
+                                     style: GoogleFonts.sourceCodePro(fontSize: 10, color: Colors.grey[500], fontWeight: FontWeight.bold)
+                                   ),
+                                   TextSpan(
+                                     text: log.message,
+                                     style: GoogleFonts.sourceCodePro(
+                                       fontSize: 11, 
+                                       color: log.isError ? Colors.red[700] : Colors.grey[800],
+                                       fontWeight: log.isError ? FontWeight.bold : FontWeight.normal
+                                     )
+                                   ),
+                                 ]
+                               )
+                            );
+                          },
+                        ),
+                  ),
                 ],
               ),
             )
