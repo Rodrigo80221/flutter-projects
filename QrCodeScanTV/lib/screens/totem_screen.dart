@@ -40,6 +40,7 @@ class _TotemScreenState extends State<TotemScreen> {
   Product? _currentProduct;
   PackVirtual? _currentPromo;
   bool _isLoading = false;
+  int _rotationTurns = 0;  // For manual screen rotation
   
   // History & Logs
   final List<LogEntry> _logs = [];
@@ -70,11 +71,21 @@ class _TotemScreenState extends State<TotemScreen> {
 
     final key = event.logicalKey;
 
+    // Manual Screen Rotation
+    if (key == LogicalKeyboardKey.arrowRight) {
+      _addLog('Girar tela +90°');
+      setState(() => _rotationTurns++);
+      return;
+    }
+    if (key == LogicalKeyboardKey.arrowLeft) {
+      _addLog('Girar tela -90°');
+      setState(() => _rotationTurns--);
+      return;
+    }
+
     // Ignore navigation keys
     if (key == LogicalKeyboardKey.arrowUp ||
         key == LogicalKeyboardKey.arrowDown ||
-        key == LogicalKeyboardKey.arrowLeft ||
-        key == LogicalKeyboardKey.arrowRight ||
         key == LogicalKeyboardKey.tab) {
       return;
     }
@@ -122,6 +133,13 @@ class _TotemScreenState extends State<TotemScreen> {
   Future<void> _processScan(String scannedUrl) async {
     _addLog('--- Nova Leitura Iniciada ---');
     _addLog('Input Bruto: $scannedUrl');
+
+    // Command: Rotate
+    if (scannedUrl.trim().toLowerCase() == 'girar') {
+      _addLog('Comando de Rotação Executado via Scanner');
+      setState(() => _rotationTurns++);
+      return;
+    }
 
     // 1. Basic Protocol Cleanup
     String processedUrl = scannedUrl;
@@ -253,8 +271,10 @@ class _TotemScreenState extends State<TotemScreen> {
       focusNode: _mainFocusNode,
       onKey: _handleKey,
       autofocus: true,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8F9FA), 
+      child: RotatedBox(
+        quarterTurns: _rotationTurns,
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF8F9FA), 
         body: Column(
           children: [
             const TotemHeader(),
@@ -343,6 +363,7 @@ class _TotemScreenState extends State<TotemScreen> {
               ),
             )
           ],
+        ),
         ),
       ),
     );
