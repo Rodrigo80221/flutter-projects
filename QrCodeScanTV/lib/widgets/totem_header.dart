@@ -8,7 +8,7 @@ class TotemHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: const Color(0xFFE30613), // Supermago Red
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Center(
         child: Image.asset(
           'assets/images/logo-big.png',

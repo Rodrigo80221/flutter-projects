@@ -48,7 +48,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
         child: CustomPaint(
           painter: DashedBorderPainter(color: const Color(0xFFFBC02D), strokeWidth: 2, gap: 5),
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(8),
             width: double.infinity,
             decoration: BoxDecoration(
               color: const Color(0xFFFFFDEF), // Yellowish background
@@ -65,7 +65,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
                     letterSpacing: 1.0,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 2),
                 if (widget.promo.descricaoPack != null)
                   Text(
                     widget.promo.descricaoPack!,
@@ -79,8 +79,8 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
                 const SizedBox(height: 5),
                 if (widget.promo.produtos != null && widget.promo.produtos!.isNotEmpty)
                   Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
+                    spacing: 4,
+                    runSpacing: 4,
                     alignment: WrapAlignment.center,
                     children: widget.promo.produtos!.map((item) {
                        return _buildPromoItem(item);
