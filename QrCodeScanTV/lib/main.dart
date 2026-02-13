@@ -27,13 +27,7 @@ void main() async {
     });
   }
 
-  // Android/Mobile: Lock to Portrait
-  if (Platform.isAndroid || Platform.isIOS) {
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-  }
+
 
   runApp(const MyApp());
 }

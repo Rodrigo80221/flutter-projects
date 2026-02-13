@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'dart:io' show Platform;
 
 import '../services/api_service.dart';
 import '../models/product_model.dart';
@@ -43,7 +44,7 @@ class _TotemScreenState extends State<TotemScreen> {
   PackVirtual? _currentPromo;
   bool _isLoading = false;
   bool _searchFailed = false; // To track if we should show the "Not Found" error state
-  int _rotationTurns = 0;  // For manual screen rotation
+  int _rotationTurns = Platform.isAndroid ? 1 : 0;  // Rotate by default on Android for vertical TV setup
   bool _showLogs = false; // Hidden by default
   
   // History & Logs
