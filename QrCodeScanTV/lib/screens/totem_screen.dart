@@ -35,11 +35,14 @@ class _TotemScreenState extends State<TotemScreen> {
   final FocusNode _mainFocusNode = FocusNode();
   final StringBuffer _buffer = StringBuffer();
   Timer? _bufferCleaner;
+  Timer? _inactivityTimer;
+
   
   // State
   Product? _currentProduct;
   PackVirtual? _currentPromo;
   bool _isLoading = false;
+  bool _searchFailed = false; // To track if we should show the "Not Found" error state
   int _rotationTurns = 0;  // For manual screen rotation
   bool _showLogs = false; // Hidden by default
   
@@ -53,8 +56,25 @@ class _TotemScreenState extends State<TotemScreen> {
   void dispose() {
     _mainFocusNode.dispose();
     _bufferCleaner?.cancel();
+    _inactivityTimer?.cancel();
     _logScrollController.dispose();
     super.dispose();
+  }
+
+  void _resetInactivityTimer() {
+    _inactivityTimer?.cancel();
+    // Only set timer if we are displaying something (product or error)
+    if (_currentProduct != null || _searchFailed) {
+      _inactivityTimer = Timer(const Duration(seconds: 10), () {
+        _addLog('Inatividade detectada (10s). Resetando para tela inicial.');
+        setState(() {
+          _currentProduct = null;
+          _currentPromo = null;
+          _searchFailed = false;
+          _buffer.clear();
+        });
+      });
+    }
   }
 
   void _addLog(String message, {bool isError = false}) {
@@ -69,6 +89,11 @@ class _TotemScreenState extends State<TotemScreen> {
 
   void _handleKey(RawKeyEvent event) {
     if (event is! RawKeyDownEvent) return;
+
+    // Any interaction resets the timer (if active)
+    if (_currentProduct != null || _searchFailed) {
+       _resetInactivityTimer();
+    }
 
     final key = event.logicalKey;
 
@@ -169,6 +194,7 @@ class _TotemScreenState extends State<TotemScreen> {
       _isLoading = true;
       _currentProduct = null;
       _currentPromo = null;
+      _searchFailed = false; 
     });
 
     try {
@@ -258,14 +284,26 @@ class _TotemScreenState extends State<TotemScreen> {
             codigoBalanca: codigoBalanca!,
             codigoEtiqueta: codigoEtiqueta!,
           );
-          if(logSuccess) _addLog('Acesso registrado com sucesso.');
-          else _addLog('Falha ao registrar acesso.', isError: true);
+           if(logSuccess) _addLog('Acesso registrado com sucesso.');
+           else _addLog('Falha ao registrar acesso.', isError: true);
+           
+           // Start inactivity timer after successful display
+           _resetInactivityTimer();
           
         } else {
            _addLog('Produto não encontrado na API.', isError: true);
+           setState(() {
+             _searchFailed = true;
+           });
+           // Start inactivity timer to go back to idle after showing error
+           _resetInactivityTimer();
         }
       } else {
         _addLog('Dados insuficientes para consulta.', isError: true);
+        setState(() {
+           _searchFailed = true;
+        });
+        _resetInactivityTimer();
       }
       
     } catch (e, stackTrace) {
@@ -312,7 +350,7 @@ class _TotemScreenState extends State<TotemScreen> {
                             ],
                           ),
                         )
-                      : const MagicState(),
+                      : MagicState(isError: _searchFailed),
             ),
             // Footer Logs
             if (_showLogs)
@@ -335,7 +373,7 @@ class _TotemScreenState extends State<TotemScreen> {
                             style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey[800]),
                           ),
                           Text(
-                            'Versão: 1.0.1 | Build: 13/02/2026 11:10 | obs: Diminuir layout',
+                            'Versão: 1.0.2 | Build: 13/02/2026 11:30',
                             style: GoogleFonts.sourceCodePro(fontSize: 10, color: Colors.grey[600]),
                           ),
                         ],
