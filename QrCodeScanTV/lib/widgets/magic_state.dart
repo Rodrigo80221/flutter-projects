@@ -8,6 +8,21 @@ class MagicState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!isError) {
+      return SizedBox.expand(
+        child: FadeIn(
+          duration: const Duration(milliseconds: 800),
+          child: Image.asset(
+            'assets/images/front-maguinho.png',
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+               return const Center(child: Icon(Icons.qr_code_scanner, size: 100, color: Color(0xFFE30613)));
+            },
+          ),
+        ),
+      );
+    }
+
     return Center(
       child: FadeIn(
         duration: const Duration(seconds: 1),
