@@ -313,9 +313,18 @@ class _TotemScreenState extends State<TotemScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Histórico e Logs do Sistema:',
-                        style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Histórico e Logs do Sistema:',
+                            style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                          ),
+                          Text(
+                            'Versão: 1.0.1 | Build: 13/02/2026 11:10 | obs: Diminuir layout',
+                            style: GoogleFonts.sourceCodePro(fontSize: 10, color: Colors.grey[600]),
+                          ),
+                        ],
                       ),
                       IconButton(
                         icon: Icon(Icons.delete_outline, size: 20, color: Colors.grey[600]),
