@@ -25,10 +25,6 @@ dependencies:
   # Typography & UI
   google_fonts: ^6.1.0
   animate_do: ^3.3.4
-  video_player: ^2.8.2  # Added for Maguinho video
-  video_player_win: ^3.2.2  # Essential for Windows video playback
-
-  flutter_markdown: ^0.6.14 # Added for Markdown rendering
   window_manager: ^0.5.1
 
 dev_dependencies:
