@@ -44,11 +44,11 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
     return ScaleTransition(
       scale: _scaleAnimation,
       child: Container(
-        margin: const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
+        margin: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
         child: CustomPaint(
           painter: DashedBorderPainter(color: const Color(0xFFFBC02D), strokeWidth: 2, gap: 5),
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(12),
             width: double.infinity,
             decoration: BoxDecoration(
               color: const Color(0xFFFFFDEF), // Yellowish background
@@ -59,10 +59,10 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
                 Text(
                   'PROMOÇÃO SURPRESA!',
                   style: GoogleFonts.inter(
-                    fontSize: 24,
+                    fontSize: 16,
                     fontWeight: FontWeight.w900,
                     color: const Color(0xFFB38F00),
-                    letterSpacing: 1.2,
+                    letterSpacing: 1.0,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -71,7 +71,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
                     widget.promo.descricaoPack!,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF856404),
                     ),
@@ -121,8 +121,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
             child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                // Base style (Normal dark text)
-                style: GoogleFonts.inter(fontSize: 18, color: const Color(0xFF5A4A08), height: 1.4), 
+                style: GoogleFonts.inter(fontSize: 13, color: const Color(0xFF5A4A08), height: 1.2), 
                 children: [
                   TextSpan(
                     text: 'Falta pouco! ',
@@ -173,12 +172,12 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
             borderRadius: BorderRadius.circular(8),
             child: Image.network(
               (item.url ?? '').replaceAll('&amp;', '&').replaceAll(';', ''),
-              width: 50,
-              height: 50,
+              width: 36,
+              height: 36,
               fit: BoxFit.cover,
                errorBuilder: (context, error, stackTrace) => Container(
-                width: 50,
-                height: 50,
+                width: 36,
+                height: 36,
                 color: Colors.grey[200],
                 child: const Icon(Icons.broken_image, size: 20),
               ),
@@ -189,7 +188,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
             child: Text(
               item.descricao ?? '',
               style: GoogleFonts.inter(
-                fontSize: 14,
+                fontSize: 11,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFF5A4A08),
               ),

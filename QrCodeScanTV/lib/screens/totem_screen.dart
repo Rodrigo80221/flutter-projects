@@ -286,7 +286,7 @@ class _TotemScreenState extends State<TotemScreen> {
                           padding: const EdgeInsets.only(bottom: 20),
                           child: Column(
                             children: [
-                              const SizedBox(height: 40),
+                              const SizedBox(height: 10),
                               ProductCard(product: _currentProduct!),
                               if (_currentPromo != null) 
                                 PromoCard(
@@ -303,7 +303,7 @@ class _TotemScreenState extends State<TotemScreen> {
             ),
             // Footer Logs
             Container(
-              height: 200, // Fixed height for logs
+              height: 120, // Fixed height for logs
               width: double.infinity,
               color: Colors.grey[200],
               padding: const EdgeInsets.all(10),
@@ -318,7 +318,7 @@ class _TotemScreenState extends State<TotemScreen> {
                         children: [
                           Text(
                             'Histórico e Logs do Sistema:',
-                            style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                            style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey[800]),
                           ),
                           Text(
                             'Versão: 1.0.1 | Build: 13/02/2026 11:10 | obs: Diminuir layout',
@@ -352,12 +352,12 @@ class _TotemScreenState extends State<TotemScreen> {
                                  children: [
                                    TextSpan(
                                      text: '[${log.formattedTime}] ',
-                                     style: GoogleFonts.sourceCodePro(fontSize: 10, color: Colors.grey[500], fontWeight: FontWeight.bold)
+                                     style: GoogleFonts.sourceCodePro(fontSize: 9, color: Colors.grey[500], fontWeight: FontWeight.bold)
                                    ),
                                    TextSpan(
                                      text: log.message,
                                      style: GoogleFonts.sourceCodePro(
-                                       fontSize: 11, 
+                                       fontSize: 9, 
                                        color: log.isError ? Colors.red[700] : Colors.grey[800],
                                        fontWeight: log.isError ? FontWeight.bold : FontWeight.normal
                                      )

@@ -66,8 +66,8 @@ class ProductCard extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40),
-      padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -87,18 +87,18 @@ class ProductCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
               product.img ?? '',
-              width: 250,
-              height: 250,
+              width: 140,
+              height: 140,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => Container(
-                width: 250,
-                height: 250,
+                width: 140,
+                height: 140,
                 color: Colors.grey[200],
                 child: const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
               ),
             ),
           ),
-          const SizedBox(width: 30),
+          const SizedBox(width: 16),
           // Product Info
           Expanded(
             child: Column(
@@ -108,59 +108,59 @@ class ProductCard extends StatelessWidget {
                 Text(
                   product.nome?.toUpperCase() ?? 'PRODUTO DESCONHECIDO',
                   style: GoogleFonts.inter(
-                    fontSize: 32,
+                    fontSize: 18,
                     fontWeight: FontWeight.w800,
                     color: const Color(0xFF2D3748),
-                    height: 1.2,
+                    height: 1.1,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Text(
                       'Peso Bruto: ',
-                      style: GoogleFonts.inter(fontSize: 18, color: Colors.grey[600]),
+                      style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
                     ),
                     Text(
                       peso,
-                      style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 10),
                     if (product.unidade != null) ...[
                        Text(
                         'R\$/ ${product.unidade}: ',
-                        style: GoogleFonts.inter(fontSize: 18, color: Colors.grey[600]),
+                        style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
                       ),
                        Text(
                         unitPriceDisplay,
-                        style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                        style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ]
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
                 if (isPromo && fromPriceDisplay != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Text('De ', style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[600])),
+                          Text('De ', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[600])),
                           Text(
                             fromPriceDisplay,
                             style: GoogleFonts.inter(
-                              fontSize: 16,
+                              fontSize: 12,
                               color: Colors.grey[500],
                               decoration: TextDecoration.lineThrough,
                             ),
                           ),
-                          Text(' por', style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[600])),
+                          Text(' por', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[600])),
                         ],
                       ),
                       Text(
                         mainPriceDisplay,
                         style: GoogleFonts.inter(
-                          fontSize: 56,
+                          fontSize: 36,
                           fontWeight: FontWeight.w900,
                           color: const Color(0xFF28A745), // Green for promo
                         ),
@@ -173,12 +173,12 @@ class ProductCard extends StatelessWidget {
                     children: [
                        Text(
                         'Preço Total:',
-                        style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[600]),
+                        style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[600]),
                       ),
                       Text(
                         mainPriceDisplay,
                         style: GoogleFonts.inter(
-                          fontSize: 56,
+                          fontSize: 36,
                           fontWeight: FontWeight.w900,
                           // If regular price, use red if matches Supermago style, or dark grey
                           color: const Color(0xFFE30613), 

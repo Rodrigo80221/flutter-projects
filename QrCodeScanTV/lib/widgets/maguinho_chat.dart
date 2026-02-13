@@ -69,7 +69,7 @@ class _MaguinhoChatWidgetState extends State<MaguinhoChatWidget> {
     if (widget.textoVenda == null) return const SizedBox.shrink();
 
     return Container(
-      margin: const EdgeInsets.only(left: 40, right: 40, bottom: 20, top: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFFF3E5DC), // Beige/Cream background from screenshot
         borderRadius: BorderRadius.circular(16),
@@ -100,7 +100,7 @@ class _MaguinhoChatWidgetState extends State<MaguinhoChatWidget> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             color: Colors.white,
-                            fontSize: 26,
+                            fontSize: 16,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -110,7 +110,7 @@ class _MaguinhoChatWidgetState extends State<MaguinhoChatWidget> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             color: Colors.white.withOpacity(0.9),
-                            fontSize: 20,
+                            fontSize: 13,
                           ),
                         ),
                       ],
@@ -135,9 +135,9 @@ class _MaguinhoChatWidgetState extends State<MaguinhoChatWidget> {
                       Positioned(
                         top: 20,
                         left: 20,
-                        right: 140, // Leave space for Maguinho on the right
+                        right: 80, // Leave space for Maguinho on the right
                         child: Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.95),
                             borderRadius: const BorderRadius.only(
@@ -163,12 +163,12 @@ class _MaguinhoChatWidgetState extends State<MaguinhoChatWidget> {
                                   data: _processText(widget.textoVenda!),
                                   styleSheet: MarkdownStyleSheet(
                                     p: GoogleFonts.inter(
-                                      fontSize: 16,
+                                      fontSize: 12,
                                       color: const Color(0xFF333333),
-                                      height: 1.4,
+                                      height: 1.2,
                                     ),
                                     strong: GoogleFonts.inter(
-                                      fontSize: 16,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: const Color(0xFF333333),
                                     ),
@@ -176,21 +176,21 @@ class _MaguinhoChatWidgetState extends State<MaguinhoChatWidget> {
                                 ),
                               const SizedBox(height: 12),
                               Row(
-                                children: [
-                                  Text(
-                                    'Quer uma receita mágica? ',
-                                    style: GoogleFonts.inter(
-                                        fontSize: 16, color: Colors.grey[700]),
-                                  ),
-                                  Text(
-                                    'É só me perguntar! ✨ 👇',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF333333),
+                                  children: [
+                                    Text(
+                                      'Quer uma receita mágica? ',
+                                      style: GoogleFonts.inter(
+                                          fontSize: 12, color: Colors.grey[700]),
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      'É só me perguntar! ✨ 👇',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF333333),
+                                      ),
+                                    ),
+                                  ],
                               ),
                             ],
                           ),

@@ -12,7 +12,7 @@ class TotemHeader extends StatelessWidget {
       child: Center(
         child: Image.asset(
           'assets/images/logo-big.png',
-          height: 120, // Increased size for the big logo
+          height: 100, 
           errorBuilder: (context, error, stackTrace) {
             // Fallback if image not found
             return Container(
@@ -23,7 +23,7 @@ class TotemHeader extends StatelessWidget {
                 'SUPERMAGO',
                 style: TextStyle(
                   color: Color(0xFFE30613),
-                  fontSize: 30,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
