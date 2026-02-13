@@ -26,9 +26,9 @@ class _MaguinhoChatWidgetState extends State<MaguinhoChatWidget> {
 
   Future<void> _initializeVideo() async {
     try {
-      print("Initializing video: assets/videos/MaguinhoHightQuality.mp4");
+      print("Initializing video: assets/videos/maguinho-2p3.mp4");
       // Try to load the asset video
-      _controller = VideoPlayerController.asset('assets/videos/MaguinhoHightQuality.mp4');
+      _controller = VideoPlayerController.asset('assets/videos/maguinho-2p3.mp4');
       
       await _controller.initialize();
       // Ensure looping and muted autoplay
