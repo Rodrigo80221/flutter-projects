@@ -41,6 +41,7 @@ class _TotemScreenState extends State<TotemScreen> {
   PackVirtual? _currentPromo;
   bool _isLoading = false;
   int _rotationTurns = 0;  // For manual screen rotation
+  bool _showLogs = false; // Hidden by default
   
   // History & Logs
   final List<LogEntry> _logs = [];
@@ -138,6 +139,18 @@ class _TotemScreenState extends State<TotemScreen> {
     if (scannedUrl.trim().toLowerCase() == 'girar') {
       _addLog('Comando de Rotação Executado via Scanner');
       setState(() => _rotationTurns++);
+      return;
+    }
+
+    // Command: Show/Hide Logs
+    if (scannedUrl.trim().toLowerCase() == 'exibir logs') {
+      _addLog('Comando: Exibir Logs');
+      setState(() => _showLogs = true);
+      return;
+    }
+    if (scannedUrl.trim().toLowerCase() == 'esconder logs') {
+      // Intentionally not logging this significantly since they will be hidden
+      setState(() => _showLogs = false);
       return;
     }
 
@@ -302,8 +315,9 @@ class _TotemScreenState extends State<TotemScreen> {
                       : const MagicState(),
             ),
             // Footer Logs
-            Container(
-              height: 120, // Fixed height for logs
+            if (_showLogs)
+              Container(
+                height: 120, // Fixed height for logs
               width: double.infinity,
               color: Colors.grey[200],
               padding: const EdgeInsets.all(10),
