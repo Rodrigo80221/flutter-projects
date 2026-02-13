@@ -76,11 +76,11 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
                       color: const Color(0xFF856404),
                     ),
                   ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 if (widget.promo.produtos != null && widget.promo.produtos!.isNotEmpty)
                   Wrap(
-                    spacing: 16,
-                    runSpacing: 16,
+                    spacing: 8,
+                    runSpacing: 8,
                     alignment: WrapAlignment.center,
                     children: widget.promo.produtos!.map((item) {
                        return _buildPromoItem(item);
@@ -114,8 +114,8 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
         String ruleStr = fmt.format(rule);
 
         return Container(
-            margin: const EdgeInsets.only(top: 24),
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            margin: const EdgeInsets.only(top: 4),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
             // Optional: You could add a background or border here if needed, 
             // but the design usually just shows centered text for this message.
             child: RichText(
