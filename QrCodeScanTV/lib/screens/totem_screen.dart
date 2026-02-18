@@ -66,8 +66,8 @@ class _TotemScreenState extends State<TotemScreen> {
     _inactivityTimer?.cancel();
     // Only set timer if we are displaying something (product or error)
     if (_currentProduct != null || _searchFailed) {
-      _inactivityTimer = Timer(const Duration(seconds: 10), () {
-        _addLog('Inatividade detectada (10s). Resetando para tela inicial.');
+      _inactivityTimer = Timer(const Duration(seconds: 300), () {
+        _addLog('Inatividade detectada (300s). Resetando para tela inicial.');
         setState(() {
           _currentProduct = null;
           _currentPromo = null;
