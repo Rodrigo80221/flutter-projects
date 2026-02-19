@@ -158,7 +158,7 @@ class ProductCard extends StatelessWidget {
                       Text(
                         mainPriceDisplay,
                         style: GoogleFonts.inter(
-                          fontSize: 36,
+                          fontSize: 30,
                           fontWeight: FontWeight.w900,
                           color: const Color(0xFF28A745), // Green for promo
                         ),
@@ -178,7 +178,7 @@ class ProductCard extends StatelessWidget {
                       Text(
                         mainPriceDisplay,
                         style: GoogleFonts.inter(
-                          fontSize: 36,
+                          fontSize: 30,
                           fontWeight: FontWeight.w900,
                           // If regular price, use red if matches Supermago style, or dark grey
                           color: const Color(0xFFE30613), 
