@@ -78,7 +78,21 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
                   ),
                 const SizedBox(height: 5),
                 if (widget.promo.produtos != null && widget.promo.produtos!.isNotEmpty)
-                  Wrap(
+                  widget.promo.produtos!.length == 2 
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Row(
+                        children: widget.promo.produtos!.map((item) {
+                          return Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: _buildPromoItem(item, maxWidth: double.infinity),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  : Wrap(
                     spacing: 4,
                     runSpacing: 4,
                     alignment: WrapAlignment.center,
@@ -149,10 +163,10 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
     return const SizedBox.shrink();
   }
 
-  Widget _buildPromoItem(PackItem item) {
+  Widget _buildPromoItem(PackItem item, {double? maxWidth}) {
     return Container(
       padding: const EdgeInsets.all(8),
-      constraints: const BoxConstraints(maxWidth: 300),
+      constraints: BoxConstraints(maxWidth: maxWidth ?? 300),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
