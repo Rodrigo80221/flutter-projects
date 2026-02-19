@@ -340,10 +340,53 @@ class _TotemScreenState extends State<TotemScreen> {
                             children: [
                               const SizedBox(height: 10),
                               ProductCard(product: _currentProduct!),
+                              
                               if (_currentPromo != null) 
                                 PromoCard(
                                   promo: _currentPromo!, 
                                   currentWeight: _currentProduct?.pesoBruto,
+                                )
+                              else
+                                Container(
+                                  margin: const EdgeInsets.only(left: 16, right: 16, top: 10),
+                                  padding: const EdgeInsets.all(16),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFFFDEF),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(color: const Color(0xFFFBC02D), width: 2, style: BorderStyle.none), // Using CustomPaint for dashed in real implementation, but solid here for simplicity or re-use PromoCard style if prefer. 
+                                    // Let's use a simpler style that matches the requested "Magia em Andamento" design
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      )
+                                    ]
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '🎩 Magia em Andamento!',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w900,
+                                          color: const Color(0xFFB38F00),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Ops! Nenhuma promoção mágica por aqui… ainda!\nO Maguinho está preparando novas ofertas para você ✨🔥',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.inter(
+                                          fontSize: 14,
+                                          color: const Color(0xFF856404),
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               
                               // Maguinho Section
@@ -356,7 +399,7 @@ class _TotemScreenState extends State<TotemScreen> {
             // Footer Logs
             if (_showLogs)
               Container(
-                height: 120, // Fixed height for logs
+                height: (_rotationTurns.isOdd ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) * 0.5,
               width: double.infinity,
               color: Colors.grey[200],
               padding: const EdgeInsets.all(10),

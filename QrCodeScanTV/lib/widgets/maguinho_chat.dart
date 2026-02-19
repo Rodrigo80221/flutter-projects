@@ -22,7 +22,7 @@ class MaguinhoChatWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: Image.asset(
           'assets/images/celular.png',
-          fit: BoxFit.contain, // or cover, depending on the image aspect ratio
+          fit: BoxFit.fitWidth, // Force full width
           width: double.infinity,
         ),
       ),

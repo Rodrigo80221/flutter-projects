@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:video_player/video_player.dart';
+import 'maguinho_chat.dart';
 
 class MagicState extends StatefulWidget {
   final bool isError;
@@ -55,40 +56,47 @@ class _MagicStateState extends State<MagicState> {
   Widget build(BuildContext context) {
     if (widget.isError) {
       // Error State
+
       return Center(
         child: FadeIn(
           duration: const Duration(seconds: 1),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.auto_fix_high,
-                  size: 100,
-                  color: Colors.purple.shade300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.auto_fix_high,
+                      size: 100,
+                      color: Colors.purple.shade300,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      "Essa embalagem sumiu do nosso estoque mágico! 🧙‍♂️",
+                      style: GoogleFonts.merriweather(
+                        fontSize: 28,
+                        color: Colors.deepPurple,
+                        fontStyle: FontStyle.normal,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Tente outro produto ou fale com o Maguinho para receber dicas mágicas.",
+                      style: GoogleFonts.merriweather(
+                        fontSize: 20,
+                        color: Colors.deepPurple.shade300,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  "Essa embalagem sumiu do nosso estoque mágico! 🧙‍♂️",
-                  style: GoogleFonts.merriweather(
-                    fontSize: 28,
-                    color: Colors.deepPurple,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Tente outro produto ou fale com o Maguinho para receber dicas mágicas.",
-                  style: GoogleFonts.merriweather(
-                    fontSize: 20,
-                    color: Colors.deepPurple.shade300,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+              const MaguinhoChatWidget(),
+            ],
           ),
         ),
       );
