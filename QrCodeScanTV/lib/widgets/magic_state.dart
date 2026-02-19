@@ -61,8 +61,9 @@ class _MagicStateState extends State<MagicState> {
         child: FadeIn(
           duration: const Duration(seconds: 1),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
@@ -74,7 +75,7 @@ class _MagicStateState extends State<MagicState> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      "Essa embalagem sumiu do nosso estoque mágico! 🧙‍♂️",
+                      "Essa embalagem sumiu do nosso estoque mágico!",
                       style: GoogleFonts.merriweather(
                         fontSize: 28,
                         color: Colors.deepPurple,
@@ -103,27 +104,29 @@ class _MagicStateState extends State<MagicState> {
     }
     
     // Main Idle State: Looping Video
-    return Container(
-      color: const Color(0xFFE30613), // Red Header Color
-      width: double.infinity,
-      height: double.infinity,
+    // Main Idle State: Looping Video
+    return SizedBox.expand(
       child: FadeIn(
         duration: const Duration(milliseconds: 800),
         child: Visibility(
            visible: _isInitialized,
            replacement: Image.asset(
              'assets/images/front-maguinho.png',
-             fit: BoxFit.contain, // Match video behavior
-             alignment: Alignment.topCenter,
+             fit: BoxFit.cover, // Match video behavior
+             width: double.infinity,
+             height: double.infinity,
              errorBuilder: (context, error, stackTrace) {
                 return const Center(child: CircularProgressIndicator(color: Colors.white));
              },
            ),
-           child: Align(
-             alignment: Alignment.topCenter,
-             child: AspectRatio(
-               aspectRatio: _controller.value.aspectRatio,
-               child: VideoPlayer(_controller),
+           child: SizedBox.expand(
+             child: FittedBox(
+               fit: BoxFit.cover,
+               child: SizedBox(
+                 width: _controller.value.size.width,
+                 height: _controller.value.size.height,
+                 child: VideoPlayer(_controller),
+               ),
              ),
            ),
         ),

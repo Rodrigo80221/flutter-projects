@@ -329,7 +329,8 @@ class _TotemScreenState extends State<TotemScreen> {
           backgroundColor: const Color(0xFFF8F9FA), 
         body: Column(
           children: [
-            const TotemHeader(),
+            if (_currentProduct != null || _searchFailed || _isLoading)
+              const TotemHeader(),
             Expanded(
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator(color: Color(0xFFE30613)))
