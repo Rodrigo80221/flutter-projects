@@ -140,23 +140,21 @@ class ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 if (isPromo && fromPriceDisplay != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: [
-                      Row(
-                        children: [
-                          Text('De ', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[600])),
-                          Text(
-                            fromPriceDisplay,
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              color: Colors.grey[500],
-                              decoration: TextDecoration.lineThrough,
-                            ),
-                          ),
-                          Text(' por', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[600])),
-                        ],
+                      Text('De ', style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600])),
+                      Text(
+                        fromPriceDisplay,
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: Colors.grey[500],
+                          decoration: TextDecoration.lineThrough,
+                        ),
                       ),
+                      Text(' por ', style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600])),
+                      const SizedBox(width: 8),
                       Text(
                         mainPriceDisplay,
                         style: GoogleFonts.inter(
@@ -168,13 +166,15 @@ class ProductCard extends StatelessWidget {
                     ],
                   )
                 else
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: [
                        Text(
-                        'Preço Total:',
-                        style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[600]),
+                        'Preço Total: ',
+                        style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[600]),
                       ),
+                      const SizedBox(width: 8),
                       Text(
                         mainPriceDisplay,
                         style: GoogleFonts.inter(
