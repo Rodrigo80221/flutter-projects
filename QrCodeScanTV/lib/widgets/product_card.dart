@@ -87,12 +87,12 @@ class ProductCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
               product.img ?? '',
-              width: 140,
-              height: 140,
+              width: 100,
+              height: 100,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => Container(
-                width: 140,
-                height: 140,
+                width: 100,
+                height: 100,
                 color: Colors.grey[200],
                 child: const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
               ),

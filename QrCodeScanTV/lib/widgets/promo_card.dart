@@ -59,7 +59,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
                 Text(
                   'PROMOÇÃO SURPRESA!',
                   style: GoogleFonts.inter(
-                    fontSize: 16,
+                    fontSize: 24,
                     fontWeight: FontWeight.w900,
                     color: const Color(0xFFB38F00),
                     letterSpacing: 1.0,
