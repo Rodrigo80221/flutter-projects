@@ -66,8 +66,8 @@ class _TotemScreenState extends State<TotemScreen> {
     _inactivityTimer?.cancel();
     // Only set timer if we are displaying something (product or error)
     if (_currentProduct != null || _searchFailed) {
-      _inactivityTimer = Timer(const Duration(seconds: 300), () {
-        _addLog('Inatividade detectada (300s). Resetando para tela inicial.');
+      _inactivityTimer = Timer(const Duration(seconds: 60), () {
+        _addLog('Inatividade detectada (60s). Resetando para tela inicial.');
         setState(() {
           _currentProduct = null;
           _currentPromo = null;
@@ -325,8 +325,19 @@ class _TotemScreenState extends State<TotemScreen> {
       autofocus: true,
       child: RotatedBox(
         quarterTurns: _rotationTurns,
-        child: Scaffold(
-          backgroundColor: const Color(0xFFF8F9FA), 
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF5A2D82), // Top color
+                Color(0xFF3B1E5E), // Bottom color
+              ],
+            ),
+          ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent, 
         body: Column(
           children: [
             if (_currentProduct != null || _searchFailed || _isLoading)
@@ -469,6 +480,7 @@ class _TotemScreenState extends State<TotemScreen> {
               ),
             )
           ],
+        ),
         ),
         ),
       ),

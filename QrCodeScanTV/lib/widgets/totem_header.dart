@@ -7,7 +7,7 @@ class TotemHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: const Color(0xFFE30613), // Supermago Red
+      color: const Color(0xFF5A2D82), // Purple Scheme
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Center(
         child: Image.asset(
@@ -22,7 +22,7 @@ class TotemHeader extends StatelessWidget {
               child: const Text(
                 'SUPERMAGO',
                 style: TextStyle(
-                  color: Color(0xFFE30613),
+                  color: Color(0xFF5A2D82),
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
