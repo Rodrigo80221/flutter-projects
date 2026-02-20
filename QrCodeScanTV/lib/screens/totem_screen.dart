@@ -48,6 +48,7 @@ class _TotemScreenState extends State<TotemScreen> {
   int _rotationTurns = Platform.isAndroid ? 1 : 0;  // Rotate by default on Android for vertical TV setup
   bool _showLogs = false; // Hidden by default
   String _codLoja = '6';
+  bool _isBarcodeScan = false; // Tracks if the last scan was an EAN-13 code
 
   @override
   void initState() {
@@ -218,6 +219,7 @@ class _TotemScreenState extends State<TotemScreen> {
       _currentProduct = null;
       _currentPromo = null;
       _searchFailed = false; 
+      _isBarcodeScan = RegExp(r'^\d+$').hasMatch(processedUrl.trim()) && processedUrl.trim().length <= 14;
     });
 
     try {
@@ -227,7 +229,7 @@ class _TotemScreenState extends State<TotemScreen> {
       String? barras;
 
       String trimmedUrl = processedUrl.trim();
-      bool isBarcodeInput = RegExp(r'^\d+$').hasMatch(trimmedUrl) && trimmedUrl.length <= 14;
+      bool isBarcodeInput = _isBarcodeScan;
       
       if (isBarcodeInput) {
         barras = trimmedUrl;
@@ -511,7 +513,8 @@ class _TotemScreenState extends State<TotemScreen> {
                                 ),
                               
                               // Maguinho Section
-                              MaguinhoChatWidget(textoVenda: _currentProduct?.textoVenda),
+                              if (!_isBarcodeScan)
+                                MaguinhoChatWidget(textoVenda: _currentProduct?.textoVenda),
                             ],
                           ),
                         )

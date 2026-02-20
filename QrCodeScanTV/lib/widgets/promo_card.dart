@@ -57,7 +57,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
             child: Column(
               children: [
                 Text(
-                  'PROMOÇÃO SURPRESA!',
+                  'PROMOÇÃO COMBO!',
                   style: GoogleFonts.inter(
                     fontSize: 24,
                     fontWeight: FontWeight.w900,

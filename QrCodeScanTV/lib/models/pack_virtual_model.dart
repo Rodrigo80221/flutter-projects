@@ -10,8 +10,11 @@ class PackVirtual {
     List<PackItem> produtosList = [];
 
     if (list != null) {
-      produtosList = list.map((i) => PackItem.fromJson(i)).toList();
-    } else if (json['DESCRICAO'] != null) {
+      produtosList = list
+          .map((i) => PackItem.fromJson(i))
+          .where((item) => item.descricao != null && item.descricao!.isNotEmpty)
+          .toList();
+    } else if (json['DESCRICAO'] != null && json['DESCRICAO'].toString().isNotEmpty) {
       // Handle flat structure where root contains the product
       produtosList.add(PackItem.fromJson(json));
     }

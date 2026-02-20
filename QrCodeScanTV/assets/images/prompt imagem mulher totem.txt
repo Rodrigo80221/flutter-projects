@@ -1,1 +1,44 @@
-Create an ultra-realistic premium commercial image in 16:9 format designed for clear long-distance readability inside a supermarket self-service totem, maintaining the same composition with the actress in strict side profile scanning the product, but optimizing typography for maximum legibility. Use a softly blurred minimalist white kitchen background with bright neutral lighting and strong separation between foreground and background. On the left side, create a large high-contrast text block using an elegant serif font with clean edges and strong readability; “Aponte a câmera do seu celular” in deep dark brown almost black (#2B2B2B), “para o QR Code.” in a flat warm golden tone with reduced metallic shine, “Fale com o Maguinho.” in slightly larger warm golden tone for emphasis, and “Receba dicas e receitas especiais!” in strong solid red with high contrast. Increase spacing between lines slightly to improve distance readability and avoid excessive decorative flourishes. Below and integrated with the text, place the Maguinho character generated strictly from the provided reference image without redesign; his magical effect must be softer and more controlled, forming a subtle flowing golden contour that gently outlines and partially encircles the text, creating a light luminous halo around the letters without overpowering them, with reduced sparkles and reduced glow intensity, ensuring the magic enhances readability instead of competing with it. On the right side, maintain the actress exactly as before: strict side profile facing right, slightly leaning forward, holding the packaged beef product with her left hand and holding the smartphone with her right hand, matching the reference action precisely; her hair loose with soft waves, wearing the light nude-beige structured blazer over a soft light blue V-neck blouse with minimal gold jewelry. The packaged beef must remain in a black supermarket tray wrapped in transparent plastic film with the QR Code attached to the plastic film and centered; the smartphone must be approximately 15 cm from the product with the back camera aligned directly toward the QR Code, and the front screen clearly visible displaying the captured QR Code exactly where she is looking, making the scanning interaction unmistakable. The final result must feel clean, premium, highly readable from distance, visually balanced, and seamlessly integrated with the system interface above.
+Create an ultra-realistic premium commercial image in 16:9 format designed for strong long-distance readability inside a supermarket self-service totem.
+
+BACKGROUND
+Use a softly blurred minimalist white kitchen environment with bright neutral lighting and strong foreground separation. The background must be clean and seamless, with no visible wall lines, creating a modern commercial system interface look.
+
+MODEL
+Young woman in her mid-20s, light skin, natural makeup, soft confident expression. She must have loose hair with soft natural waves (not tied, not ponytail). Hair must look healthy, slightly voluminous, naturally falling over shoulders.
+
+She is wearing:
+• A structured light nude-beige blazer (similar to the reference image)
+• A soft light blue blouse underneath (modest neckline, elegant and refined)
+• Minimal gold jewelry
+
+She is in strict side profile facing right, slightly leaning forward in a natural engaged posture.
+
+ACTION (CRITICAL DETAIL)
+She is holding a packaged beef product in her left hand. The product is in a black supermarket tray wrapped in transparent plastic film. The QR Code is attached to the plastic film and centered on the package.
+
+She holds a smartphone in her right hand, approximately 15 cm away from the product. The back camera must be aligned directly toward the QR Code. The front screen must clearly display the QR Code being scanned, exactly where she is looking. The scanning interaction must be unmistakable and visually obvious.
+
+TYPOGRAPHY – LEFT SIDE TEXT BLOCK
+
+Use a bold elegant serif font with thick strokes and excellent distance readability.
+
+Level 1 (Instruction – dominant block in deep purple #4B2A75):
+
+“Aponte a câmera do seu celular”
+“para o QR Code e fale com o Maguinho.”
+
+Both lines in solid deep purple (#4B2A75), strong weight, flat color (no gradient, no metallic effect). Increase line spacing slightly for clarity.
+
+Level 2 (Benefit – strong highlight in solid gold #F2C94C):
+
+“Receba dicas e receitas especiais!”
+
+This line must be larger than the instruction lines, in solid warm gold (#F2C94C), flat color, bold weight. Add subtle extra vertical spacing before this line to create visual hierarchy and strong emphasis.
+
+No red. No green. No gradient. Only flat purple and flat gold.
+
+MAGUINHO
+Place the Maguinho character below or slightly integrated with the text block, strictly based on the provided reference image without redesign. His magical effect must be soft warm gold light (#F2C94C), subtly flowing upward toward the benefit line, without overlapping or reducing text readability. Keep glow minimal and controlled.
+
+FINAL RESULT
+The image must feel premium, clean, highly readable from distance, visually balanced, brand-consistent with a purple and gold supermarket interface, and optimized for a totem display environment.
