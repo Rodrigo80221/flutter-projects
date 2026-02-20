@@ -554,6 +554,7 @@ class _TotemScreenState extends State<TotemScreen> {
                                 PromoCard(
                                   promo: _currentPromo!, 
                                   currentWeight: _currentProduct?.pesoBruto,
+                                  isBarcodeScan: _isBarcodeScan,
                                 )
                               else
                                 Container(

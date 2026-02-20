@@ -9,8 +9,9 @@ import 'dart:ui';
 class PromoCard extends StatefulWidget {
   final PackVirtual promo;
   final String? currentWeight;
+  final bool isBarcodeScan;
 
-  const PromoCard({super.key, required this.promo, this.currentWeight});
+  const PromoCard({super.key, required this.promo, this.currentWeight, this.isBarcodeScan = false});
 
   @override
   State<PromoCard> createState() => _PromoCardState();
@@ -57,7 +58,7 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
             child: Column(
               children: [
                 Text(
-                  'PROMOÇÃO COMBO!',
+                  widget.isBarcodeScan ? 'PROMOÇÃO COMBO!' : 'PROMOÇÃO SURPRESA!',
                   style: GoogleFonts.inter(
                     fontSize: 24,
                     fontWeight: FontWeight.w900,
