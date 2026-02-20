@@ -61,6 +61,12 @@ class ProductCard extends StatelessWidget {
 
     // Weight formatting
     String peso = product.pesoBruto ?? '-';
+    if (peso != '-') {
+      double? parsedWeight = double.tryParse(peso.replaceAll(RegExp(r'[^\d.,]'), '').replaceAll(',', '.'));
+      if (parsedWeight != null) {
+        peso = parsedWeight.toStringAsFixed(3).replaceAll('.', ',');
+      }
+    }
     if (!peso.toLowerCase().contains('kg')) {
       peso += ' Kg';
     }
@@ -115,30 +121,32 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      'Peso Bruto: ',
-                      style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
-                    ),
-                    Text(
-                      peso,
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                    const SizedBox(width: 10),
-                    if (product.unidade != null) ...[
-                       Text(
-                        'R\$/ ${product.unidade}: ',
+                if (product.isPesado)
+                  Row(
+                    children: [
+                      Text(
+                        'Peso Bruto: ',
                         style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
                       ),
-                       Text(
-                        unitPriceDisplay,
+                      Text(
+                        peso,
                         style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
-                    ]
-                  ],
-                ),
-                const SizedBox(height: 12),
+                      const SizedBox(width: 10),
+                      if (product.unidade != null) ...[
+                         Text(
+                          'R\$/ ${product.unidade}: ',
+                          style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
+                        ),
+                         Text(
+                          unitPriceDisplay,
+                          style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                      ]
+                    ],
+                  ),
+                if (product.isPesado) 
+                  const SizedBox(height: 12),
                 if (isPromo && fromPriceDisplay != null)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,

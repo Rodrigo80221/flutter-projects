@@ -10,11 +10,11 @@ class ApiService {
   Future<Product?> consultarEtiqueta({String? codigoBalanca, String? codigoEtiqueta, String? barras, String codLoja = '6'}) async {
     try {
       final payload = barras != null 
-          ? {'barras': barras, 'codLoja': codLoja}
+          ? {'barras': barras, 'codLoja': int.tryParse(codLoja) ?? 6}
           : {
               'codigoBalanca': codigoBalanca,
               'codigoEtiqueta': codigoEtiqueta,
-              'codLoja': codLoja,
+              'codLoja': int.tryParse(codLoja) ?? 6,
             };
       print('ConsultarEtiqueta Payload: $payload');
       
@@ -45,11 +45,11 @@ class ApiService {
   Future<PackVirtual?> consultarPackVirtual({String? codigoBalanca, String? codigoEtiqueta, String? barras, String codLoja = '6'}) async {
     try {
       final payload = barras != null 
-          ? {'barras': barras, 'codLoja': codLoja}
+          ? {'barras': barras, 'codLoja': int.tryParse(codLoja) ?? 6}
           : {
               'codigoBalanca': codigoBalanca,
               'codigoEtiqueta': codigoEtiqueta,
-              'codLoja': codLoja,
+              'codLoja': int.tryParse(codLoja) ?? 6,
             };
 
       final response = await http.post(
