@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:io' show Platform;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/api_service.dart';
 import '../models/product_model.dart';
@@ -46,6 +47,20 @@ class _TotemScreenState extends State<TotemScreen> {
   bool _searchFailed = false; // To track if we should show the "Not Found" error state
   int _rotationTurns = Platform.isAndroid ? 1 : 0;  // Rotate by default on Android for vertical TV setup
   bool _showLogs = false; // Hidden by default
+  String _codLoja = '6';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadConfig();
+  }
+
+  Future<void> _loadConfig() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _codLoja = prefs.getString('codLoja') ?? '6';
+    });
+  }
   
   // History & Logs
   final List<LogEntry> _logs = [];
@@ -180,6 +195,13 @@ class _TotemScreenState extends State<TotemScreen> {
       return;
     }
 
+    // Command: Configurar Loja
+    if (scannedUrl.trim().toLowerCase() == 'configurar loja') {
+      _addLog('Comando: Configurar Loja');
+      _showConfigDialog();
+      return;
+    }
+
     // 1. Basic Protocol Cleanup
     String processedUrl = scannedUrl;
     // Fix common sticky-shift issue: "https?" -> "https://"
@@ -278,6 +300,7 @@ class _TotemScreenState extends State<TotemScreen> {
           codigoBalanca: codigoBalanca,
           codigoEtiqueta: codigoEtiqueta,
           barras: barras,
+          codLoja: _codLoja,
         );
         
         if (product != null) {
@@ -292,6 +315,7 @@ class _TotemScreenState extends State<TotemScreen> {
             codigoBalanca: codigoBalanca,
             codigoEtiqueta: codigoEtiqueta,
             barras: barras,
+            codLoja: _codLoja,
           );
           if (promo != null) {
              _addLog('Promoção encontrada: ${promo.descricaoPack}');
@@ -339,6 +363,67 @@ class _TotemScreenState extends State<TotemScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  void _showConfigDialog() {
+    final TextEditingController controller = TextEditingController(text: _codLoja);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Configurar Loja'),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: const InputDecoration(
+              hintText: 'Digite o código da loja',
+            ),
+            autofocus: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _mainFocusNode.requestFocus();
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.grey),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                controller.clear();
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Limpar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final String newValue = controller.text.trim();
+                if (newValue.isNotEmpty) {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('codLoja', newValue);
+                  setState(() {
+                    _codLoja = newValue;
+                  });
+                  _addLog('Código da loja atualizado para: $_codLoja');
+                }
+                if (mounted) {
+                   Navigator.of(context).pop();
+                   _mainFocusNode.requestFocus();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF5A2D82),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Salvar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

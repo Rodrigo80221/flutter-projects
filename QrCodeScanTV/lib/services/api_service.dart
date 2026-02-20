@@ -7,13 +7,14 @@ class ApiService {
   static const String _baseUrl = 'https://fluxo.telecon.cloud/webhook/PrevineAI';
 
   /// Consulta informações de uma etiqueta
-  Future<Product?> consultarEtiqueta({String? codigoBalanca, String? codigoEtiqueta, String? barras}) async {
+  Future<Product?> consultarEtiqueta({String? codigoBalanca, String? codigoEtiqueta, String? barras, String codLoja = '6'}) async {
     try {
       final payload = barras != null 
-          ? {'barras': barras}
+          ? {'barras': barras, 'codLoja': codLoja}
           : {
               'codigoBalanca': codigoBalanca,
               'codigoEtiqueta': codigoEtiqueta,
+              'codLoja': codLoja,
             };
       print('ConsultarEtiqueta Payload: $payload');
       
@@ -41,13 +42,14 @@ class ApiService {
   }
 
   /// Consulta informações do pack virtual
-  Future<PackVirtual?> consultarPackVirtual({String? codigoBalanca, String? codigoEtiqueta, String? barras}) async {
+  Future<PackVirtual?> consultarPackVirtual({String? codigoBalanca, String? codigoEtiqueta, String? barras, String codLoja = '6'}) async {
     try {
       final payload = barras != null 
-          ? {'barras': barras}
+          ? {'barras': barras, 'codLoja': codLoja}
           : {
               'codigoBalanca': codigoBalanca,
               'codigoEtiqueta': codigoEtiqueta,
+              'codLoja': codLoja,
             };
 
       final response = await http.post(
