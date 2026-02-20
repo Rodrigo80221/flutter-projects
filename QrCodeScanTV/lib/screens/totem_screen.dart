@@ -141,6 +141,15 @@ class _TotemScreenState extends State<TotemScreen> {
       return;
     }
 
+    // Menu Key
+    if (key == LogicalKeyboardKey.keyM || 
+        key == LogicalKeyboardKey.contextMenu ||
+        key.debugName == 'Menu' || 
+        key.debugName == 'Settings') {
+      _showSettingsMenu();
+      return;
+    }
+
     String? charToAppend;
 
     // Manual mapping to fix common scanner issues (Shift state errors, missing chars)
@@ -425,6 +434,83 @@ class _TotemScreenState extends State<TotemScreen> {
           ],
         );
       },
+    );
+  }
+
+  void _showSettingsMenu() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text('Opções do Sistema', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          children: [
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+                _showConfigDialog();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.storefront, color: Color(0xFF5A2D82)),
+                    const SizedBox(width: 12),
+                    Text('Configurar Loja', style: GoogleFonts.inter(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() => _showLogs = !_showLogs);
+                _mainFocusNode.requestFocus();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Row(
+                  children: [
+                    Icon(_showLogs ? Icons.visibility_off : Icons.visibility, color: const Color(0xFF5A2D82)),
+                    const SizedBox(width: 12),
+                    Text(_showLogs ? 'Esconder Logs' : 'Exibir Logs', style: GoogleFonts.inter(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() => _rotationTurns++);
+                _mainFocusNode.requestFocus();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.screen_rotation, color: Color(0xFF5A2D82)),
+                    const SizedBox(width: 12),
+                    Text('Girar Tela', style: GoogleFonts.inter(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
+            const Divider(),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+                _mainFocusNode.requestFocus();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Center(
+                  child: Text('Fechar', style: GoogleFonts.inter(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 16)),
+                ),
+              ),
+            ),
+          ],
+        );
+      }
     );
   }
 
