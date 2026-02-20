@@ -200,66 +200,85 @@ class _TotemScreenState extends State<TotemScreen> {
 
     try {
       String? extractedCode;
-      
-      // Strategy A: Standard Delimiter Split (/21/)
-      if (processedUrl.contains('/21/')) {
-        List<String> parts = processedUrl.split('/21/');
-        if (parts.length > 1) {
-          String candidate = parts.last;
-          if (candidate.contains('?')) candidate = candidate.split('?')[0];
-          if (candidate.contains('&')) candidate = candidate.split('&')[0];
-          if (candidate.contains('/')) candidate = candidate.split('/')[0];
-          extractedCode = candidate;
-          _addLog('Extração via /21/ sucesso: $extractedCode');
-        }
-      } 
-      
-      // Strategy B: Robust Regex Fallback
-      if (extractedCode == null) {
-        _addLog('Tentando extração via Regex fallback...');
-        final fallbackRegex = RegExp(r'01\d{14}21([a-zA-Z0-9]+)');
-        final match = fallbackRegex.firstMatch(processedUrl);
-        if (match != null) {
-          String candidate = match.group(1)!;
-          extractedCode = candidate;
-          _addLog('Extração via Regex sucesso: $extractedCode');
-        } else {
-           _addLog('Falha na extração de código (Regex). URL pode estar inválida.', isError: true);
-        }
-      }
-
-      // Final cleanup and Validation of extractedCode
-      if (extractedCode != null) {
-          final badChars = RegExp(r'[?&=]');
-          if (extractedCode!.contains(badChars)) {
-              List<String> parts = extractedCode!.split(badChars);
-              extractedCode = parts[0];
-              _addLog('Cleaned metadata: $extractedCode');
-          }
-          
-          if (extractedCode!.length > 13) {
-             extractedCode = extractedCode!.substring(0, 13);
-             _addLog('Truncado para 13 chars: $extractedCode');
-          }
-      }
-
       String? codigoBalanca;
       String? codigoEtiqueta;
+      String? barras;
 
-      if (extractedCode != null && extractedCode.length >= 13) {
-        codigoBalanca = extractedCode!.substring(0, 6);
-        codigoEtiqueta = extractedCode!.substring(6, 13);
-        _addLog('Parseado: Balança=$codigoBalanca, Etiqueta=$codigoEtiqueta');
-      } else {
+      String trimmedUrl = processedUrl.trim();
+      bool isBarcodeInput = RegExp(r'^\d+$').hasMatch(trimmedUrl) && trimmedUrl.length <= 14;
+      
+      if (isBarcodeInput) {
+        barras = trimmedUrl;
+        _addLog('Identificado como código de barras (EAN): $barras');
+      }
+
+      if (!isBarcodeInput) {
+        // Strategy A: Standard Delimiter Split (/21/)
+        if (processedUrl.contains('/21/')) {
+          List<String> parts = processedUrl.split('/21/');
+          if (parts.length > 1) {
+            String candidate = parts.last;
+            if (candidate.contains('?')) candidate = candidate.split('?')[0];
+            if (candidate.contains('&')) candidate = candidate.split('&')[0];
+            if (candidate.contains('/')) candidate = candidate.split('/')[0];
+            extractedCode = candidate;
+            _addLog('Extração via /21/ sucesso: $extractedCode');
+          }
+        } 
+        
+        // Strategy B: Robust Regex Fallback
+        if (extractedCode == null) {
+          _addLog('Tentando extração via Regex fallback...');
+          final fallbackRegex = RegExp(r'01\d{14}21([a-zA-Z0-9]+)');
+          final match = fallbackRegex.firstMatch(processedUrl);
+          if (match != null) {
+            String candidate = match.group(1)!;
+            extractedCode = candidate;
+            _addLog('Extração via Regex sucesso: $extractedCode');
+          } else {
+             _addLog('Falha na extração de código (Regex). URL pode estar inválida.', isError: true);
+          }
+        }
+
+        // Final cleanup and Validation of extractedCode
         if (extractedCode != null) {
-           _addLog('Código extraído muito curto para processar: ${extractedCode.length}', isError: true);
+            final badChars = RegExp(r'[?&=]');
+            if (extractedCode!.contains(badChars)) {
+                List<String> parts = extractedCode!.split(badChars);
+                extractedCode = parts[0];
+                _addLog('Cleaned metadata: $extractedCode');
+            }
+            
+            if (extractedCode!.length > 13) {
+               extractedCode = extractedCode!.substring(0, 13);
+               _addLog('Truncado para 13 chars: $extractedCode');
+            }
+        }
+
+        if (extractedCode != null && extractedCode!.length >= 13) {
+          codigoBalanca = extractedCode!.substring(0, 6);
+          codigoEtiqueta = extractedCode!.substring(6, 13);
+          _addLog('Parseado: Balança=$codigoBalanca, Etiqueta=$codigoEtiqueta');
+        } else {
+          if (extractedCode != null) {
+             _addLog('Código extraído muito curto para processar: ${extractedCode!.length}', isError: true);
+          }
         }
       }
       
-      if (codigoBalanca != null && codigoEtiqueta != null) {
+      if (barras != null || (codigoBalanca != null && codigoEtiqueta != null)) {
         // 2. Fetch Product
-        _addLog('Consultando Produto (Balança: $codigoBalanca)...');
-        final product = await _apiService.consultarEtiqueta(codigoBalanca, codigoEtiqueta);
+        if (barras != null) {
+           _addLog('Consultando Produto (Barras: $barras)...');
+        } else {
+           _addLog('Consultando Produto (Balança: $codigoBalanca)...');
+        }
+
+        final product = await _apiService.consultarEtiqueta(
+          codigoBalanca: codigoBalanca,
+          codigoEtiqueta: codigoEtiqueta,
+          barras: barras,
+        );
         
         if (product != null) {
           _addLog('Produto encontrado: ${product.nome}');
@@ -269,7 +288,11 @@ class _TotemScreenState extends State<TotemScreen> {
           
           // 3. Fetch Promo
           _addLog('Buscando Promoções/Pack...');
-          final promo = await _apiService.consultarPackVirtual(codigoBalanca!, codigoEtiqueta!);
+          final promo = await _apiService.consultarPackVirtual(
+            codigoBalanca: codigoBalanca,
+            codigoEtiqueta: codigoEtiqueta,
+            barras: barras,
+          );
           if (promo != null) {
              _addLog('Promoção encontrada: ${promo.descricaoPack}');
             setState(() {
@@ -282,8 +305,9 @@ class _TotemScreenState extends State<TotemScreen> {
           // 4. Log Access
            _addLog('Registrando acesso na API...');
            bool logSuccess = await _apiService.gravarDadosAcesso(
-            codigoBalanca: codigoBalanca!,
-            codigoEtiqueta: codigoEtiqueta!,
+            codigoBalanca: codigoBalanca,
+            codigoEtiqueta: codigoEtiqueta,
+            barras: barras,
           );
            if(logSuccess) _addLog('Acesso registrado com sucesso.');
            else _addLog('Falha ao registrar acesso.', isError: true);

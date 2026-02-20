@@ -7,12 +7,14 @@ class ApiService {
   static const String _baseUrl = 'https://fluxo.telecon.cloud/webhook/PrevineAI';
 
   /// Consulta informações de uma etiqueta
-  Future<Product?> consultarEtiqueta(String codigoBalanca, String codigoEtiqueta) async {
+  Future<Product?> consultarEtiqueta({String? codigoBalanca, String? codigoEtiqueta, String? barras}) async {
     try {
-      final payload = {
-          'codigoBalanca': codigoBalanca,
-          'codigoEtiqueta': codigoEtiqueta,
-      };
+      final payload = barras != null 
+          ? {'barras': barras}
+          : {
+              'codigoBalanca': codigoBalanca,
+              'codigoEtiqueta': codigoEtiqueta,
+            };
       print('ConsultarEtiqueta Payload: $payload');
       
       final response = await http.post(
@@ -24,8 +26,11 @@ class ApiService {
       if (response.statusCode == 200 && response.body.isNotEmpty) {
         final data = jsonDecode(response.body);
         if (data is List && data.isNotEmpty) {
-           return Product.fromJson(data[0]);
+           final item = data[0] as Map<String, dynamic>;
+           if (item.isEmpty || (item['nome'] == null && item['Descricao'] == null)) return null;
+           return Product.fromJson(item);
         } else if (data is Map<String, dynamic>) {
+           if (data.isEmpty || (data['nome'] == null && data['Descricao'] == null)) return null;
            return Product.fromJson(data);
         }
       }
@@ -36,15 +41,19 @@ class ApiService {
   }
 
   /// Consulta informações do pack virtual
-  Future<PackVirtual?> consultarPackVirtual(String codigoBalanca, String codigoEtiqueta) async {
+  Future<PackVirtual?> consultarPackVirtual({String? codigoBalanca, String? codigoEtiqueta, String? barras}) async {
     try {
+      final payload = barras != null 
+          ? {'barras': barras}
+          : {
+              'codigoBalanca': codigoBalanca,
+              'codigoEtiqueta': codigoEtiqueta,
+            };
+
       final response = await http.post(
         Uri.parse('$_baseUrl/ConsultarPackVirtual'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'codigoBalanca': codigoBalanca,
-          'codigoEtiqueta': codigoEtiqueta,
-        }),
+        body: jsonEncode(payload),
       );
 
       if (response.statusCode == 200 && response.body.isNotEmpty) {
@@ -65,14 +74,22 @@ class ApiService {
 
   /// Grava log de acesso (sem GEO por enquanto no Totem)
   Future<bool> gravarDadosAcesso({
-    required String codigoBalanca,
-    required String codigoEtiqueta,
+    String? codigoBalanca,
+    String? codigoEtiqueta,
+    String? barras,
     String? codigoSessao,
     String? ipClient,
   }) async {
     try {
       final payload = {
-        'body': {
+        'body': barras != null ? {
+          'barras': barras,
+          'latitude': null, // Totem é fixo geralmente
+          'longitude': null,
+          'accuracy': null,
+          'ipClient': ipClient ?? "",
+          'codigoSessao': codigoSessao ?? "",
+        } : {
           'codigoBalanca': codigoBalanca,
           'codigoEtiqueta': codigoEtiqueta,
           'latitude': null, // Totem é fixo geralmente
