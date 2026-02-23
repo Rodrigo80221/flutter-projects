@@ -437,6 +437,58 @@ class _TotemScreenState extends State<TotemScreen> {
     );
   }
 
+  void _showManualScanDialog() {
+    final TextEditingController controller = TextEditingController();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Simular Leitura'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: 'Digite o EAN ou Cole a URL',
+            ),
+            autofocus: true,
+            onSubmitted: (value) {
+              if (value.isNotEmpty) {
+                 Navigator.of(context).pop();
+                 _processScan(value);
+              }
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _mainFocusNode.requestFocus();
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.grey),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final String newValue = controller.text.trim();
+                if (newValue.isNotEmpty) {
+                   if (mounted) {
+                     Navigator.of(context).pop();
+                     _processScan(newValue);
+                   }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF5A2D82),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Pesquisar'),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
   void _showSettingsMenu() {
     showDialog(
       context: context,
@@ -457,6 +509,22 @@ class _TotemScreenState extends State<TotemScreen> {
                     const Icon(Icons.storefront, color: Color(0xFF5A2D82)),
                     const SizedBox(width: 12),
                     Text('Configurar Loja', style: GoogleFonts.inter(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+                _showManualScanDialog();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.qr_code_scanner, color: Color(0xFF5A2D82)),
+                    const SizedBox(width: 12),
+                    Text('Simular Leitura', style: GoogleFonts.inter(fontSize: 16)),
                   ],
                 ),
               ),
@@ -496,6 +564,28 @@ class _TotemScreenState extends State<TotemScreen> {
               ),
             ),
             const Divider(),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  _currentProduct = null;
+                  _currentPromo = null;
+                  _searchFailed = false;
+                  _buffer.clear();
+                });
+                _mainFocusNode.requestFocus();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.home, color: Color(0xFF5A2D82)),
+                    const SizedBox(width: 12),
+                    Text('Voltar ao Início', style: GoogleFonts.inter(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(context);
