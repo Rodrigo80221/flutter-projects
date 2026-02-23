@@ -1,0 +1,8 @@
+Você disse
+Create a clean and simple 16:9 horizontal banner for a Smart TV application named “Maguinho Scan”. The banner must fully occupy the entire frame with no borders or empty margins. It should be optimized for Android TV, highly readable from a distance, bold and visually balanced.
+
+Background: smooth deep magical purple gradient (#5A2D82 to #3B1E5E) with a soft subtle glow in the center. No textures, no noise, very clean and modern.
+
+Center composition: a large modern stylized QR code in soft white or light cream tone, with rounded corners and thick modules for strong TV visibility. The QR code should be the main focal point.
+
+Integrated magical effect: a magic wand positioned diagonally near the QR code, as if activating it. The wand tip emits a small but bright golden spark (#F2C94C). From the spark, subtle golden light trails and particles wrap partially around the QR code, creating a soft magical activation effect. The effect must be elegant and controlled — not exaggerated — with gentle glow and light particles that enhance the QR code without overwhelming it.

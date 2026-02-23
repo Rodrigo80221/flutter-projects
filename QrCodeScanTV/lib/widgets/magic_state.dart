@@ -71,14 +71,14 @@ class _MagicStateState extends State<MagicState> {
                     Icon(
                       Icons.auto_fix_high,
                       size: 100,
-                      color: Colors.purple.shade300,
+                      color: Colors.white.withOpacity(0.9),
                     ),
                     const SizedBox(height: 20),
                     Text(
                       "Essa embalagem sumiu do nosso estoque mágico!",
                       style: GoogleFonts.merriweather(
                         fontSize: 28,
-                        color: Colors.deepPurple,
+                        color: Colors.white,
                         fontStyle: FontStyle.normal,
                       ),
                       textAlign: TextAlign.center,
@@ -88,7 +88,7 @@ class _MagicStateState extends State<MagicState> {
                       "Tente outro produto ou fale com o Maguinho para receber dicas mágicas.",
                       style: GoogleFonts.merriweather(
                         fontSize: 20,
-                        color: Colors.deepPurple.shade300,
+                        color: Colors.white.withOpacity(0.7),
                       ),
                       textAlign: TextAlign.center,
                     ),
