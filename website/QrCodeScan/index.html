@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermago - Consulta & Maguinho</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/resources/css/paginaprincipal.css">
+</head>
+
+<body>
+
+    <div class="header-brand text-center">
+        <a id="linkLogo" href="#" target="_blank">
+            <img src="/resources/imagens/logomago.png" class="img-fluid" alt="Supermago Logo"
+                onerror="this.src='https://placehold.co/200x50/white/E30613?text=SUPERMAGO'">
+        </a>
+    </div>
+
+    <div class="container pb-5">
+
+        <a id="linkProdutoPrincipal" class="product-card text-decoration-none" href="#" target="_blank">
+            <div class="product-img-wrap text-center">
+                <img src="https://via.placeholder.com/200" id="imgProduto" class="product-img img-fluid rounded"
+                    alt="Produto"
+                    onerror="this.src='https://t0.gstatic.com/images?q=tbn:ANd9GcTrTKArD5zhH6N8hUZbrDvpmL0kvN2sySDiTaT9AS8c2RaQg-I8KQ3H2pgVuKU&s'">
+            </div>
+
+            <div class="product-info">
+                <h3 id="nomeProduto" class="fw-bold text-dark mb-2">Carregando...</h3>
+
+                <div class="detail-row">
+                    <small class="text-muted">Peso Bruto:</small>
+                    <strong id="pesoBruto">--</strong>
+                    <span id="valorVendaContainer" class="ms-1" style="display:none">
+                        <small id="labelUnidade" class="text-muted"></small>
+                        <strong id="valorVenda">--</strong>
+                    </span>
+                </div>
+
+                <div class="price-inline mt-2">
+                    <small id="labelPrecoTotal" class="text-muted">Preço Total:</small>
+                    <div class="price-tag" id="preco">R$ --</div>
+                </div>
+            </div>
+        </a>
+
+        <div id="promoSection" class="promo-box text-center" style="display: none;">
+            <div class="promo-header">PROMOÇÃO SURPRESA!</div>
+            <div class="promo-subtext" id="promoTexto">Carregando oferta...</div>
+            <div id="promoProdutos" class="promo-produtos"></div>
+            <p id="promoObsText" class="promo-observacao" style="display: none;"></p>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                Descubra dicas deliciosas com o Maguinho!
+            </div>
+            <div class="chat-video-wrapper">
+                <video autoplay muted playsinline preload="metadata" class="chat-bg-video">
+                    <source src="/resources/css/videos/maguinhov1.webm" type="video/webm">
+                </video>
+                <div class="chat-body" id="chatBody">
+                    <div class="msg msg-bot clearfix">
+                        Olá! Sou o Maguinho. Posso te dar dicas de receita com esse produto ou tirar dúvidas. O que
+                        deseja?
+                    </div>
+                </div>
+            </div>
+            <div class="p-2 bg-white border-top">
+                <div class="input-group">
+                    <input type="text" id="inputMsg" class="form-control" placeholder="Digite aqui...">
+                    <button class="btn btn-danger" onclick="enviarMsg()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/resources/scripts/apiconsultas.js"></script>
+    <script src="/resources/scripts/paginaprincipal.js"></script>
+</body>
+
+</html>

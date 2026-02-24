@@ -1,0 +1,446 @@
+    :root {
+        --mago-red: #E30613;
+        /* Cor oficial aproximada */
+        --mago-dark: #b3000b;
+    }
+
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow-x: hidden;
+    }
+
+    /* Header Supermago */
+    .header-brand {
+        background-color: var(--mago-red);
+        color: white;
+        padding: 8px 0;
+        /* Reduced from 15px */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-brand img {
+        width: 50%;
+        /* Reduced from 60% */
+        max-width: 200px;
+        /* Reduced from 250px */
+        height: auto;
+    }
+
+
+
+    /* Card Produto */
+    .product-card {
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        border-radius: 16px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 5px 10px -5px rgba(0, 0, 0, 0.02);
+        padding: 12px;
+        margin-top: -25px;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.08), 0 8px 15px -5px rgba(0, 0, 0, 0.03);
+    }
+
+    .product-img-wrap {
+        flex-shrink: 0;
+    }
+
+    .product-img {
+        width: auto;
+        max-width: 140px;
+        height: auto;
+        max-height: 110px;
+        object-fit: contain;
+        border-radius: 8px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+    }
+
+    .product-info h3 {
+        margin-bottom: 2px !important;
+        font-size: 0.75rem;
+        /* Reduced from 0.8rem */
+        line-height: 1.2;
+        color: #2d3748;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    .product-info .price-inline {
+        margin-top: 2px !important;
+    }
+
+    .price-inline {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .price-tag {
+        color: var(--mago-red);
+        font-size: 1.05rem;
+        /* Reduced from 1.1rem */
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.03em;
+    }
+
+    .detail-row {
+        display: flex;
+        gap: 5px;
+        border-bottom: 1px dashed #edf2f7;
+        padding: 2px 0;
+        /* Reduced from 3px */
+        align-items: baseline;
+    }
+
+    .detail-row small {
+        font-size: 0.65rem;
+    }
+
+    .detail-row strong {
+        color: #2d3748;
+        /* Darker to match price/title */
+        font-weight: 800;
+        /* Bolder to match price tag weight */
+        font-size: 0.7rem;
+        /* Reduced from 0.75rem */
+        /* Slightly larger */
+    }
+
+    @media (max-width: 576px) {
+        .header-brand img {
+            width: auto;
+            max-width: 70%;
+        }
+
+        .product-card {
+            flex-direction: row;
+            /* Side by side */
+            align-items: center;
+            text-align: left;
+            /* Left align text */
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: -30px;
+            /* Reduced overlap from -50px */
+            width: 100%;
+            padding: 5px;
+            /* Reduced padding */
+            gap: 10px;
+            /* Smaller gap */
+        }
+
+        .product-img {
+            width: auto;
+            max-width: 90px;
+            /* Smaller image */
+            margin-bottom: 0;
+        }
+
+        .product-info h3 {
+            font-size: 0.7rem;
+            /* Reduced from 0.75rem */
+            /* Smaller font */
+            line-height: 1.1;
+            margin-bottom: 2px !important;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .price-inline {
+            justify-content: flex-start;
+            /* Left align price */
+            margin-top: 2px !important;
+        }
+
+        .price-tag {
+            font-size: 0.9rem;
+            /* Reduced from 1.0rem */
+            /* Smaller price */
+        }
+
+        /* Chat fixes for mobile */
+        /* Chat fixes for mobile */
+        .chat-body {
+            padding: 5px !important;
+            /* Force tight padding */
+        }
+
+        .chat-header {
+            font-size: 0.8rem;
+            padding: 6px 8px;
+            white-space: normal;
+            /* Allow text to wrap */
+        }
+
+        .msg {
+            font-size: 0.65rem;
+            padding: 3px 5px;
+            max-width: 95%;
+        }
+
+        .promo-subtext {
+            font-size: 0.5rem;
+            margin-bottom: 1px;
+            /* Reduced from 4px */
+        }
+
+        .promo-box {
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+
+    /* Card Promoção - Modern Design */
+    .promo-box {
+        background: #fffdef;
+        border: 2px dashed #fbc02d;
+        border-radius: 16px;
+        padding: 10px 10px 4px 10px;
+        /* Reduced bottom padding */
+        margin-top: 10px;
+        position: relative;
+        box-shadow: 0 0 20px rgba(251, 192, 45, 0.15);
+        text-align: center;
+        animation: attract-pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes attract-pulse {
+        0% {
+            border-color: #fbc02d;
+            box-shadow: 0 0 10px rgba(251, 192, 45, 0.2);
+            transform: scale(1);
+        }
+
+        50% {
+            border-color: #ffca28;
+            box-shadow: 0 0 25px rgba(251, 192, 45, 0.6);
+            transform: scale(1.02);
+        }
+
+        100% {
+            border-color: #fbc02d;
+            box-shadow: 0 0 10px rgba(251, 192, 45, 0.2);
+            transform: scale(1);
+        }
+    }
+
+    .promo-header {
+        font-size: 0.9rem;
+        /* Reduced from 0.95rem */
+        font-weight: 800;
+        color: #b38f00;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+        letter-spacing: 0.02em;
+    }
+
+    .promo-subtext {
+        font-size: 0.7rem;
+        color: #856404;
+        font-weight: 600;
+        margin-bottom: 1px;
+        /* Reduced margin */
+    }
+
+    .promo-produtos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+    }
+
+    .promo-produto-item {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 5px;
+        flex: 1 1 calc(50% - 10px);
+        min-width: 130px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.02);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: transform 0.2s;
+    }
+
+    .promo-produto-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .promo-produto-img {
+        width: 45px;
+        height: 45px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+
+    .promo-produto-desc {
+        font-size: 0.8rem;
+        color: #5a4a08;
+        font-weight: 700;
+        line-height: 1.1;
+        text-align: left;
+    }
+
+    .promo-observacao {
+        margin-top: 1px;
+        /* Reduced margin */
+        margin-bottom: 0;
+        /* Removing default p margin */
+        font-size: 0.75rem;
+        color: #856404;
+        font-weight: 600;
+        opacity: 0.9;
+    }
+
+    /* Chat Maguinho */
+    .chat-container {
+        margin-top: 10px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .chat-header {
+        background: var(--mago-dark);
+        color: white;
+        padding: 8px 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        /* Added size */
+    }
+
+    .chat-body {
+        height: 100%;
+        /* Fill wrapper */
+        overflow-y: auto;
+        padding: 15px;
+        background-color: transparent;
+        /* Transparent for video */
+        position: relative;
+        z-index: 1;
+    }
+
+    .chat-video-wrapper {
+        position: relative;
+        height: 250px;
+        /* Reduced from 280px */
+        background-color: #f0f0f0;
+        /* Fallback color */
+        overflow: hidden;
+    }
+
+    @media (min-width: 992px) {
+        .chat-video-wrapper {
+            height: 350px;
+            /* Reduced from 400px */
+        }
+    }
+
+    .chat-bg-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        /* Match previous image alignment */
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .msg {
+        margin-bottom: 3px;
+        /* Reduced from 4px */
+        padding: 6px 10px;
+        border-radius: 12px;
+        max-width: 60%;
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+
+    .msg-bot {
+        background: rgba(255, 255, 255, 0.85);
+        border-bottom-left-radius: 2px;
+        color: #333;
+        border: 1px solid rgba(221, 221, 221, 0.8);
+        float: left;
+        clear: both;
+    }
+
+    .msg-bot-space {
+        margin-top: 5px;
+        /* Reduced from 60px */
+    }
+
+    .msg-user {
+        background: rgba(227, 6, 19, 0.85);
+        /* var(--mago-red) com transparência */
+        color: white;
+        border-bottom-right-radius: 2px;
+        float: right;
+        clear: both;
+    }
+
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Estilo para mensagem m�gica (Produto n�o encontrado) */
+    .magic-text {
+        color: #4a148c !important;
+        /* Roxo M�gico Profundo */
+        font-family: 'Georgia', 'Times New Roman', serif;
+        /* Fonte estilo livro antigo/grim�rio */
+        font-style: normal;
+        font-size: 1.1rem !important;
+        text-shadow: 1px 1px 2px rgba(74, 20, 140, 0.1);
+        background: linear-gradient(45deg, #4a148c, #7b1fa2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.4 !important;
+    }
+
+    .text-decoration-none {
+        text-decoration: none !important;
+    }
+
+    /* Desktop Layout Adjustment */
+    @media (min-width: 768px) {
+        .container {
+            max-width: 600px !important;
+        }
+    }

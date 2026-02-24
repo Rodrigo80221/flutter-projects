@@ -1,0 +1,10 @@
+1- Entrar no cmd no diretório anterior ao do projeto e rodar o comando abaixo
+
+swa deploy ./QrCodeScan --deployment-token 02405663ebfbb6e51d21f28470f46c446cabe2e1873b2c4852f6e3bc67d2cec504-113d15c5-4d35-41ec-ac67-fb65b89eadb900f0913043f3e70f --env production
+
+
+Todos arquivos irão sumir para a página
+
+
+Endereço da hospedagem do dashboard
+https://purple-hill-043f3e70f.4.azurestaticapps.net/dashborad/dashboard.html

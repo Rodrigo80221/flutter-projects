@@ -1,0 +1,18 @@
+• 1. Atualizar a Versão do App
+- Abra o arquivo pubspec.yaml na raiz do projeto Flutter.
+- Localize a linha da versão (ex: version: 1.0.0+1) e altere para a numeração superior desejada nos 2 últimos números (ex: version: 1.0.1+2). Salve o arquivo.
+
+• 2. Compilar o Novo Binário
+- Abra o terminal na pasta do projeto Flutter e execute o comando: flutter build apk --release
+
+• 3. Sincronizar Arquivos e Gerar XML
+- Volte para a raiz e execute o script atualizar_arquivos.bat.
+- Ele fará a cópia automática do APK para a pasta do site e extrairá a nova versão para criar o arquivo versao.xml.
+
+• 4. Enviar para a Nuvem (Deploy Azure)
+- Execute o script enviar_nuvem.bat.
+- O terminal exibirá um alerta de segurança informando que todo o site será atualizado. Digite sim e aperte Enter para confirmar o envio dos arquivos para a Azure. Aguarde a mensagem de sucesso.
+
+• 5. Atualizar o Totem Fisicamente
+- Com os arquivos online, vá até a TV do supermercado.
+- Abra o menu do aplicativo e clique na opção "Atualizar Sistema" para que o totem baixe e instale a nova versão automaticamente.

@@ -4,8 +4,13 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'dart:io' show Platform;
+import 'dart:io';
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../services/api_service.dart';
 import '../models/product_model.dart';
@@ -49,6 +54,7 @@ class _TotemScreenState extends State<TotemScreen> {
   bool _showLogs = false; // Hidden by default
   String _codLoja = '6';
   bool _isBarcodeScan = false; // Tracks if the last scan was an EAN-13 code
+  String _appVersion = '...';
 
   @override
   void initState() {
@@ -58,9 +64,13 @@ class _TotemScreenState extends State<TotemScreen> {
 
   Future<void> _loadConfig() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _codLoja = prefs.getString('codLoja') ?? '6';
-    });
+    final packageInfo = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() {
+        _appVersion = packageInfo.version;
+        _codLoja = prefs.getString('codLoja') ?? '6';
+      });
+    }
   }
   
   // History & Logs
@@ -323,45 +333,54 @@ class _TotemScreenState extends State<TotemScreen> {
           _addLog('Produto encontrado: ${product.nome}');
           setState(() {
             _currentProduct = product;
+            _isLoading = false; // Release the loading screen immediately!
           });
           
-          // 3. Fetch Promo
-          _addLog('Buscando Promoções/Pack...');
+          // Start inactivity timer after successful product display
+          _resetInactivityTimer();
+
+          // 3. Fetch Promo (Asynchronous, won't block the UI!)
+          _addLog('Buscando Promoções/Pack em segundo plano...');
           final Stopwatch stopwatchPromo = Stopwatch()..start();
-          final promo = await _apiService.consultarPackVirtual(
+          _apiService.consultarPackVirtual(
             codigoBalanca: codigoBalanca,
             codigoEtiqueta: codigoEtiqueta,
             barras: barras,
             codLoja: _codLoja,
-          );
-          stopwatchPromo.stop();
-          if (promo != null) {
-             _addLog('=> Promoção carregada em ${stopwatchPromo.elapsedMilliseconds}ms');
-             _addLog('Promoção encontrada: ${promo.descricaoPack}');
-            setState(() {
-              _currentPromo = promo;
-            });
-          } else {
-            _addLog('Nenhuma promoção ativa.');
-          }
+          ).then((promo) {
+             stopwatchPromo.stop();
+             if (promo != null) {
+                if (mounted) {
+                  _addLog('=> Promoção carregada em ${stopwatchPromo.elapsedMilliseconds}ms');
+                  _addLog('Promoção encontrada: ${promo.descricaoPack}');
+                  setState(() {
+                    _currentPromo = promo;
+                  });
+                }
+             } else {
+               _addLog('Nenhuma promoção ativa (${stopwatchPromo.elapsedMilliseconds}ms).');
+             }
+          }).catchError((e) {
+             _addLog('Erro ao buscar promoção: $e', isError: true);
+          });
           
-          // 4. Log Access
-           _addLog('Registrando acesso na API...');
-           final Stopwatch stopwatchLog = Stopwatch()..start();
-           bool logSuccess = await _apiService.gravarDadosAcesso(
+          // 4. Log Access (Asynchronous Fire-and-Forget)
+          _addLog('Registrando acesso na API em segundo plano...');
+          final Stopwatch stopwatchLog = Stopwatch()..start();
+          _apiService.gravarDadosAcesso(
             codigoBalanca: codigoBalanca,
             codigoEtiqueta: codigoEtiqueta,
             barras: barras,
-          );
-           stopwatchLog.stop();
-           if(logSuccess) _addLog('=> Acesso registrado com sucesso (${stopwatchLog.elapsedMilliseconds}ms).');
-           else _addLog('Falha ao registrar acesso (${stopwatchLog.elapsedMilliseconds}ms).', isError: true);
-           
-           stopwatchTotal.stop();
-           _addLog('--- FIM: Processamento concluído em ${stopwatchTotal.elapsedMilliseconds}ms ---');
-
-           // Start inactivity timer after successful display
-           _resetInactivityTimer();
+          ).then((logSuccess) {
+             stopwatchLog.stop();
+             if(logSuccess) _addLog('=> Acesso registrado com sucesso (${stopwatchLog.elapsedMilliseconds}ms).');
+             else _addLog('Falha ao registrar acesso (${stopwatchLog.elapsedMilliseconds}ms).', isError: true);
+          }).catchError((e) {
+             _addLog('Erro ao registrar acesso: $e', isError: true);
+          });
+          
+          stopwatchTotal.stop();
+          _addLog('--- Produto na Tela: Fluxo Principal concluído em ${stopwatchTotal.elapsedMilliseconds}ms ---');
           
         } else {
            stopwatchTotal.stop();
@@ -388,6 +407,84 @@ class _TotemScreenState extends State<TotemScreen> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  void _checkForUpdates() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(color: Color(0xFFE30613)),
+              const SizedBox(height: 16),
+              const Text('Buscando atualizações...'),
+            ],
+          ),
+        );
+      },
+    );
+
+    try {
+      final dio = Dio();
+      final response = await dio.get('https://fluxo.telecon.cloud/webhook/atualizacao-maguinho');
+      
+      if (response.statusCode == 200 && response.data != null) {
+        final data = (response.data is String) ? jsonDecode(response.data) : response.data;
+        final String versaoAtual = data['versao_atual']?.toString() ?? '';
+        final String urlDownload = data['url_download']?.toString() ?? '';
+
+        final packageInfo = await PackageInfo.fromPlatform();
+        final String myVersion = packageInfo.version;
+
+        bool isMaior = false;
+        try {
+          List<int> vHttp = versaoAtual.split('.').map((e) => int.tryParse(e) ?? 0).toList();
+          List<int> vLocal = myVersion.split('.').map((e) => int.tryParse(e) ?? 0).toList();
+          for (int i = 0; i < 3; i++) {
+             int remote = vHttp.length > i ? vHttp[i] : 0;
+             int local = vLocal.length > i ? vLocal[i] : 0;
+             if (remote > local) { isMaior = true; break; }
+             if (remote < local) { break; }
+          }
+        } catch(e) {
+          // Fallback comparison
+        }
+
+        if (mounted) Navigator.of(context).pop(); // dismiss loading dialog
+
+        if (!isMaior) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('O sistema já está na versão mais recente.'), backgroundColor: Colors.green),
+            );
+          }
+          return;
+        }
+
+        // Is greater! Show progress dialog
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (ctx) {
+              return UpdateProgressDialog(url: urlDownload);
+            }
+          );
+        }
+      } else {
+        throw Exception('Resposta inválida do servidor: ${response.statusCode}');
+      }
+    } catch (e) {
+      if (mounted) Navigator.of(context).pop(); // dismiss loading dialog
+      if (mounted) {
+         ScaffoldMessenger.of(context).showSnackBar(
+           SnackBar(content: Text('Falha ao buscar atualização: $e'), backgroundColor: Colors.red),
+         );
+      }
     }
   }
 
@@ -509,7 +606,14 @@ class _TotemScreenState extends State<TotemScreen> {
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: Text('Opções do Sistema', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Opções do Sistema', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text('Versão $_appVersion', style: GoogleFonts.inter(color: Colors.grey, fontSize: 13)),
+            ],
+          ),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           children: [
             SimpleDialogOption(
@@ -579,6 +683,22 @@ class _TotemScreenState extends State<TotemScreen> {
               ),
             ),
             const Divider(),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+                _checkForUpdates();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.system_update, color: Color(0xFF5A2D82)),
+                    const SizedBox(width: 12),
+                    Text('Atualizar Sistema', style: GoogleFonts.inter(fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(context);
@@ -725,19 +845,10 @@ class _TotemScreenState extends State<TotemScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
                           Text(
                             'Histórico e Logs do Sistema:',
                             style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey[800]),
                           ),
-                          Text(
-                            'Versão: 1.0.2 | Build: 13/02/2026 11:30',
-                            style: GoogleFonts.sourceCodePro(fontSize: 10, color: Colors.grey[600]),
-                          ),
-                        ],
-                      ),
                       IconButton(
                         icon: Icon(Icons.delete_outline, size: 20, color: Colors.grey[600]),
                         onPressed: () {
@@ -791,3 +902,89 @@ class _TotemScreenState extends State<TotemScreen> {
     );
   }
 }
+
+class UpdateProgressDialog extends StatefulWidget {
+  final String url;
+  const UpdateProgressDialog({super.key, required this.url});
+
+  @override
+  State<UpdateProgressDialog> createState() => _UpdateProgressDialogState();
+}
+
+class _UpdateProgressDialogState extends State<UpdateProgressDialog> {
+  double _progress = 0;
+  String _status = "Iniciando download...";
+  bool _error = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    _startDownload();
+  }
+
+  Future<void> _startDownload() async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/app_atualizacao.apk';
+
+      await Dio().download(
+        widget.url, 
+        filePath,
+        onReceiveProgress: (rec, total) {
+          if (total != -1 && mounted) {
+             setState(() {
+               _progress = rec / total;
+               _status = "Baixando: ${(_progress * 100).toStringAsFixed(0)}%";
+             });
+          }
+        }
+      );
+
+      if (mounted) {
+        setState(() {
+           _status = "Instalando a atualização...";
+           _progress = 1.0;
+        });
+      }
+
+      final result = await OpenFilex.open(filePath);
+      if (result.type != ResultType.done && mounted) {
+         setState(() {
+            _error = true;
+            _status = "Erro ao executar o instalador:\n${result.message}";
+         });
+      }
+    } catch(e) {
+      if (mounted) {
+        setState(() {
+           _error = true;
+           _status = "Erro no download: $e";
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+      return AlertDialog(
+          title: Text(_error ? 'Falha na Atualização' : 'Atualizando Sistema', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+          content: Column(
+             mainAxisSize: MainAxisSize.min,
+             children: [
+               if (!_error) LinearProgressIndicator(value: _progress <= 0 ? null : _progress, color: const Color(0xFF5A2D82)),
+               const SizedBox(height: 16),
+               Text(_status, textAlign: TextAlign.center, style: GoogleFonts.inter()),
+             ]
+          ),
+          actions: [
+             if (_error)
+               TextButton(
+                  onPressed: () => Navigator.pop(context), 
+                  style: TextButton.styleFrom(foregroundColor: Colors.grey),
+                  child: const Text('Fechar')
+               )
+          ]
+      );
+  }
+}
+

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Engajamento | QR Code</title>
+    <meta name="description" content="Histórico de dados de acesso e interações.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="background-mesh"></div>
+
+    <main class="app-container">
+        <header class="header">
+            <div class="logo-area">
+                <h1>Dashboard de Engajamento</h1>
+            </div>
+            <p class="subtitle">Consulte o registro de atividades e interações do sistema.</p>
+        </header>
+
+        <section class="filter-card">
+            <div class="inputs-row">
+                <div class="input-group">
+                    <label for="dataInicial">Data Inicial</label>
+                    <input type="date" id="dataInicial" name="dataInicial">
+                </div>
+                <div class="input-group">
+                    <label for="dataFinal">Data Final</label>
+                    <input type="date" id="dataFinal" name="dataFinal">
+                </div>
+                <div class="input-group checkbox-group"
+                    style="display: flex; flex-direction: row; align-items: center; gap: 0.5rem; height: 48px;">
+                    <input type="checkbox" id="apenasComInteracao" name="apenasComInteracao"
+                        style="width: 20px; height: 20px; cursor: pointer;">
+                    <label for="apenasComInteracao"
+                        style="margin-bottom: 0; cursor: pointer; color: var(--text-main);">Com Interação</label>
+                </div>
+                <button id="btnConsultar" class="btn-primary">
+                    <span class="btn-text">Consultar</span>
+                    <span class="btn-loader"></span>
+                </button>
+            </div>
+        </section>
+
+        <section id="results-area" class="results-area hidden">
+            <div class="table-container desktop-only">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;"></th>
+                            <th>Produto</th>
+                            <th>Data/Hora</th>
+                            <th>Localização</th>
+                            <th>Interações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-corpo">
+                        <!-- Rows rendered here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="mobile-cards" class="mobile-cards mobile-only">
+                <!-- Cards rendered here -->
+            </div>
+
+            <!-- Summary Footer -->
+            <div id="summary-card" class="summary-card">
+                <div class="summary-item">
+                    <span class="summary-label">Total de Acessos</span>
+                    <span class="summary-value" id="total-acessos">0</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-item">
+                    <span class="summary-label">Com Interação Chat</span>
+                    <span class="summary-value" id="total-chat">0</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-item">
+                    <span class="summary-label">Engajamento</span>
+                    <span class="summary-value highlight" id="taxa-engajamento">0%</span>
+                </div>
+            </div>
+        </section>
+
+        <div id="status-message" class="status-message">
+            <p>Selecione o período e clique em consultar para visualizar os dados.</p>
+        </div>
+    </main>
+
+    <script src="scripts/apiconsultas.js"></script>
+    <script src="scripts/script.js"></script>
+</body>
+
+</html>
