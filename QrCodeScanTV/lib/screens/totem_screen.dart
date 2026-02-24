@@ -232,6 +232,8 @@ class _TotemScreenState extends State<TotemScreen> {
     });
 
     try {
+      final Stopwatch stopwatchTotal = Stopwatch()..start();
+      
       String? extractedCode;
       String? codigoBalanca;
       String? codigoEtiqueta;
@@ -307,14 +309,17 @@ class _TotemScreenState extends State<TotemScreen> {
            _addLog('Consultando Produto (Balança: $codigoBalanca)...');
         }
 
+        final Stopwatch stopwatchProduto = Stopwatch()..start();
         final product = await _apiService.consultarEtiqueta(
           codigoBalanca: codigoBalanca,
           codigoEtiqueta: codigoEtiqueta,
           barras: barras,
           codLoja: _codLoja,
         );
+        stopwatchProduto.stop();
         
         if (product != null) {
+          _addLog('=> Produto carregado em ${stopwatchProduto.elapsedMilliseconds}ms');
           _addLog('Produto encontrado: ${product.nome}');
           setState(() {
             _currentProduct = product;
@@ -322,13 +327,16 @@ class _TotemScreenState extends State<TotemScreen> {
           
           // 3. Fetch Promo
           _addLog('Buscando Promoções/Pack...');
+          final Stopwatch stopwatchPromo = Stopwatch()..start();
           final promo = await _apiService.consultarPackVirtual(
             codigoBalanca: codigoBalanca,
             codigoEtiqueta: codigoEtiqueta,
             barras: barras,
             codLoja: _codLoja,
           );
+          stopwatchPromo.stop();
           if (promo != null) {
+             _addLog('=> Promoção carregada em ${stopwatchPromo.elapsedMilliseconds}ms');
              _addLog('Promoção encontrada: ${promo.descricaoPack}');
             setState(() {
               _currentPromo = promo;
@@ -339,18 +347,25 @@ class _TotemScreenState extends State<TotemScreen> {
           
           // 4. Log Access
            _addLog('Registrando acesso na API...');
+           final Stopwatch stopwatchLog = Stopwatch()..start();
            bool logSuccess = await _apiService.gravarDadosAcesso(
             codigoBalanca: codigoBalanca,
             codigoEtiqueta: codigoEtiqueta,
             barras: barras,
           );
-           if(logSuccess) _addLog('Acesso registrado com sucesso.');
-           else _addLog('Falha ao registrar acesso.', isError: true);
+           stopwatchLog.stop();
+           if(logSuccess) _addLog('=> Acesso registrado com sucesso (${stopwatchLog.elapsedMilliseconds}ms).');
+           else _addLog('Falha ao registrar acesso (${stopwatchLog.elapsedMilliseconds}ms).', isError: true);
            
+           stopwatchTotal.stop();
+           _addLog('--- FIM: Processamento concluído em ${stopwatchTotal.elapsedMilliseconds}ms ---');
+
            // Start inactivity timer after successful display
            _resetInactivityTimer();
           
         } else {
+           stopwatchTotal.stop();
+           _addLog('=> Falha na busca após ${stopwatchProduto.elapsedMilliseconds}ms');
            _addLog('Produto não encontrado na API.', isError: true);
            setState(() {
              _searchFailed = true;
