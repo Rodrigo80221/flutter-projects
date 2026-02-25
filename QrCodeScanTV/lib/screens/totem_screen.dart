@@ -415,14 +415,19 @@ class _TotemScreenState extends State<TotemScreen> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) {
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+        return _withRotatedShortcuts(
+          RotatedBox(
+            quarterTurns: _rotationTurns,
+          child: AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
             children: [
               const CircularProgressIndicator(color: Color(0xFFE30613)),
               const SizedBox(height: 16),
               const Text('Buscando atualizações...'),
             ],
+          ),
+          ),
           ),
         );
       },
@@ -471,7 +476,12 @@ class _TotemScreenState extends State<TotemScreen> {
             context: context,
             barrierDismissible: false,
             builder: (ctx) {
-              return UpdateProgressDialog(url: urlDownload);
+              return _withRotatedShortcuts(
+                RotatedBox(
+                  quarterTurns: _rotationTurns,
+                child: UpdateProgressDialog(url: urlDownload)
+              ),
+              );
             }
           );
         }
@@ -494,9 +504,12 @@ class _TotemScreenState extends State<TotemScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Configurar Loja'),
-          content: TextField(
+        return _withRotatedShortcuts(
+          RotatedBox(
+            quarterTurns: _rotationTurns,
+          child: AlertDialog(
+            title: const Text('Configurar Loja'),
+            content: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -544,6 +557,8 @@ class _TotemScreenState extends State<TotemScreen> {
               child: const Text('Salvar'),
             ),
           ],
+        ),
+        ),
         );
       },
     );
@@ -555,9 +570,12 @@ class _TotemScreenState extends State<TotemScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Simular Leitura'),
-          content: TextField(
+        return _withRotatedShortcuts(
+          RotatedBox(
+            quarterTurns: _rotationTurns,
+            child: AlertDialog(
+              title: const Text('Simular Leitura'),
+            content: TextField(
             controller: controller,
             decoration: const InputDecoration(
               hintText: 'Digite o EAN ou Cole a URL',
@@ -596,6 +614,8 @@ class _TotemScreenState extends State<TotemScreen> {
               child: const Text('Pesquisar'),
             ),
           ],
+        ),
+        ),
         );
       }
     );
@@ -605,9 +625,12 @@ class _TotemScreenState extends State<TotemScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return SimpleDialog(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        return _withRotatedShortcuts(
+          RotatedBox(
+            quarterTurns: _rotationTurns,
+          child: SimpleDialog(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Opções do Sistema', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
               const SizedBox(height: 4),
@@ -734,8 +757,22 @@ class _TotemScreenState extends State<TotemScreen> {
               ),
             ),
           ],
+        ),
+        ),
         );
       }
+    );
+  }
+
+  Widget _withRotatedShortcuts(Widget child) {
+    if (_rotationTurns % 4 == 0) return child;
+
+    return Shortcuts(
+      shortcuts: <ShortcutActivator, Intent>{
+        const SingleActivator(LogicalKeyboardKey.arrowDown): const NextFocusIntent(),
+        const SingleActivator(LogicalKeyboardKey.arrowUp): const PreviousFocusIntent(),
+      },
+      child: child,
     );
   }
 
@@ -745,9 +782,10 @@ class _TotemScreenState extends State<TotemScreen> {
       focusNode: _mainFocusNode,
       onKey: _handleKey,
       autofocus: true,
-      child: RotatedBox(
-        quarterTurns: _rotationTurns,
-        child: Container(
+      child: _withRotatedShortcuts(
+        RotatedBox(
+          quarterTurns: _rotationTurns,
+          child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -895,6 +933,7 @@ class _TotemScreenState extends State<TotemScreen> {
               ),
             )
           ],
+        ),
         ),
         ),
         ),

@@ -1,3 +1,5 @@
+Observação Antigravity: Os passos abaixo devem ser feitos somentes pelos desenvolvedor, não automatize nem realize os passos abaixo.
+
 • 1. Atualizar a Versão do App
 - Abra o arquivo pubspec.yaml na raiz do projeto Flutter.
 - Localize a linha da versão (ex: version: 1.0.0+1) e altere para a numeração superior desejada nos 2 últimos números (ex: version: 1.0.1+2). Salve o arquivo.
