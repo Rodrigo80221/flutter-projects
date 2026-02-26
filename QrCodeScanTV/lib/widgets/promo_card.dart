@@ -79,27 +79,22 @@ class _PromoCardState extends State<PromoCard> with SingleTickerProviderStateMix
                   ),
                 const SizedBox(height: 5),
                 if (widget.promo.produtos != null && widget.promo.produtos!.isNotEmpty)
-                  widget.promo.produtos!.length == 2 
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Row(
-                        children: widget.promo.produtos!.map((item) {
-                          return Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: _buildPromoItem(item, maxWidth: double.infinity),
-                            ),
-                          );
-                        }).toList(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        childAspectRatio: 2.8, // Adjust ratio as needed for height of the item
                       ),
-                    )
-                  : Wrap(
-                    spacing: 4,
-                    runSpacing: 4,
-                    alignment: WrapAlignment.center,
-                    children: widget.promo.produtos!.map((item) {
-                       return _buildPromoItem(item);
-                    }).toList(),
+                      itemCount: widget.promo.produtos!.length,
+                      itemBuilder: (context, index) {
+                        return _buildPromoItem(widget.promo.produtos![index], maxWidth: double.infinity);
+                      },
+                    ),
                   ),
                 
                 // Warning Message
