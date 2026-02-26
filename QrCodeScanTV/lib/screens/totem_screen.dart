@@ -50,6 +50,7 @@ class _TotemScreenState extends State<TotemScreen> {
   PackVirtual? _currentPromo;
   bool _isLoading = false;
   bool _searchFailed = false; // To track if we should show the "Not Found" error state
+  bool _apiError = false; // To track if we should show the API error state
   int _rotationTurns = Platform.isAndroid ? 1 : 0;  // Rotate by default on Android for vertical TV setup
   bool _showLogs = false; // Hidden by default
   String _codLoja = '6';
@@ -91,13 +92,14 @@ class _TotemScreenState extends State<TotemScreen> {
   void _resetInactivityTimer() {
     _inactivityTimer?.cancel();
     // Only set timer if we are displaying something (product or error)
-    if (_currentProduct != null || _searchFailed) {
+    if (_currentProduct != null || _searchFailed || _apiError) {
       _inactivityTimer = Timer(const Duration(seconds: 60), () {
         _addLog('Inatividade detectada (60s). Resetando para tela inicial.');
         setState(() {
           _currentProduct = null;
           _currentPromo = null;
           _searchFailed = false;
+          _apiError = false;
           _buffer.clear();
         });
       });
@@ -118,7 +120,7 @@ class _TotemScreenState extends State<TotemScreen> {
     if (event is! RawKeyDownEvent) return;
 
     // Any interaction resets the timer (if active)
-    if (_currentProduct != null || _searchFailed) {
+    if (_currentProduct != null || _searchFailed || _apiError) {
        _resetInactivityTimer();
     }
 
@@ -238,6 +240,7 @@ class _TotemScreenState extends State<TotemScreen> {
       _currentProduct = null;
       _currentPromo = null;
       _searchFailed = false; 
+      _apiError = false;
       _isBarcodeScan = RegExp(r'^\d+$').hasMatch(processedUrl.trim()) && processedUrl.trim().length <= 14;
     });
 
@@ -403,6 +406,10 @@ class _TotemScreenState extends State<TotemScreen> {
     } catch (e, stackTrace) {
       _addLog('Erro CRÍTICO no processamento: $e', isError: true);
       debugPrintStack(label: e.toString(), stackTrace: stackTrace);
+      setState(() {
+        _apiError = true;
+      });
+      _resetInactivityTimer();
     } finally {
       setState(() {
         _isLoading = false;
@@ -729,6 +736,7 @@ class _TotemScreenState extends State<TotemScreen> {
                   _currentProduct = null;
                   _currentPromo = null;
                   _searchFailed = false;
+                  _apiError = false;
                   _buffer.clear();
                 });
                 _mainFocusNode.requestFocus();
@@ -800,7 +808,7 @@ class _TotemScreenState extends State<TotemScreen> {
             backgroundColor: Colors.transparent, 
         body: Column(
           children: [
-            if (_currentProduct != null || _searchFailed || _isLoading)
+            if (_currentProduct != null || _searchFailed || _apiError || _isLoading)
               const TotemHeader(),
             Expanded(
               child: _isLoading
@@ -868,7 +876,7 @@ class _TotemScreenState extends State<TotemScreen> {
                             ],
                           ),
                         )
-                      : MagicState(isError: _searchFailed),
+                      : MagicState(isError: _searchFailed, isApiError: _apiError),
             ),
             // Footer Logs
             if (_showLogs)

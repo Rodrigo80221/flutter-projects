@@ -6,7 +6,8 @@ import 'maguinho_chat.dart';
 
 class MagicState extends StatefulWidget {
   final bool isError;
-  const MagicState({super.key, this.isError = false});
+  final bool isApiError;
+  const MagicState({super.key, this.isError = false, this.isApiError = false});
 
   @override
   State<MagicState> createState() => _MagicStateState();
@@ -36,8 +37,10 @@ class _MagicStateState extends State<MagicState> {
   @override
   void didUpdateWidget(MagicState oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.isError != oldWidget.isError) {
-      if (widget.isError) {
+    bool shouldBeError = widget.isError || widget.isApiError;
+    bool wasError = oldWidget.isError || oldWidget.isApiError;
+    if (shouldBeError != wasError) {
+      if (shouldBeError) {
         _controller.pause();
       } else {
         _controller.play();
@@ -54,7 +57,7 @@ class _MagicStateState extends State<MagicState> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isError) {
+    if (widget.isError || widget.isApiError) {
       // Error State
 
       return Center(
@@ -69,13 +72,15 @@ class _MagicStateState extends State<MagicState> {
                 child: Column(
                   children: [
                     Icon(
-                      Icons.auto_fix_high,
+                      widget.isApiError ? Icons.wifi_off : Icons.auto_fix_high,
                       size: 100,
                       color: Colors.white.withOpacity(0.9),
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      "Essa embalagem sumiu do nosso estoque mágico!",
+                      widget.isApiError 
+                        ? "Bola de cristal sem sinal! 🔮 Nosso sistema central está temporariamente fora do ar. Por favor, consulte o preço diretamente com a nossa equipe nos caixas."
+                        : "Essa embalagem sumiu do nosso estoque mágico!",
                       style: GoogleFonts.merriweather(
                         fontSize: 28,
                         color: Colors.white,
@@ -83,15 +88,17 @@ class _MagicStateState extends State<MagicState> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Tente outro produto ou fale com o Maguinho para receber dicas mágicas.",
-                      style: GoogleFonts.merriweather(
-                        fontSize: 20,
-                        color: Colors.white.withOpacity(0.7),
+                    if (!widget.isApiError) ...[
+                      const SizedBox(height: 10),
+                      Text(
+                        "Tente outro produto ou fale com o Maguinho para receber dicas mágicas.",
+                        style: GoogleFonts.merriweather(
+                          fontSize: 20,
+                          color: Colors.white.withOpacity(0.7),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                    ],
                   ],
                 ),
               ),

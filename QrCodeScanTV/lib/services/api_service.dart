@@ -22,7 +22,7 @@ class ApiService {
         Uri.parse('$_baseUrl/ConsultarEtiqueta'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(payload),
-      );
+      ).timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200 && response.body.isNotEmpty) {
         final data = jsonDecode(response.body);
@@ -34,9 +34,12 @@ class ApiService {
            if (data.isEmpty || (data['nome'] == null && data['Descricao'] == null)) return null;
            return Product.fromJson(data);
         }
+      } else if (response.statusCode != 200 && response.statusCode != 404 && response.statusCode != 204) {
+         throw Exception('Erro na API: ${response.statusCode}');
       }
     } catch (e) {
       print('Erro ao consultar etiqueta: $e');
+      throw Exception('API_ERROR: $e');
     }
     return null;
   }
